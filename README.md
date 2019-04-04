@@ -13,4 +13,5 @@ Simulations and analysis for our auditory change-point task
 - Make sure it is up to date by typing `$ conda update conda` in a terminal window (note: don't type the dollar sign, this just signifies that it is a terminal command).
 - Get our `conda_environment.yml` file somewhere on your computer (the usual thing to do is to clone this repo)
 - Follow [these 3 steps](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file) on the command line.  
+
 Note: If your newly created environment doesn't show up in your list of Jupyter kernels, follow [these steps](https://stackoverflow.com/a/44786736).
