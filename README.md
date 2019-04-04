@@ -1,5 +1,14 @@
 # Audio_2AFC_Analysis
 Simulations and analysis for our auditory change-point task
+# Repository Structure
+In the `Tutorials/` folder, we gather code that illustrates important concepts in our work.
+
+The `stimulus.ipynb` file is a Jupyter notebook that contains our current research notes and
+figures.
+
+The `mmcomplexity.py` file is a Python module in which we store the important functions and
+classes that we define.
+
 # Development Workflow
 - All contributors pull/push from `dev`, and work on individual feature branches. 
 - Commits must be frequent.
