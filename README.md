@@ -3,7 +3,7 @@ Simulations and analysis for our auditory change-point task
 # Repository Structure
 In the `Tutorials/` folder, we gather code that illustrates important concepts in our work.
 
-The `stimulus.ipynb` file is a Jupyter notebook that contains our current research notes and
+The `simulations.ipynb` file is a Jupyter notebook that contains our current research notes and
 figures.
 
 The `mmcomplexity.py` file is a Python module in which we store the important functions and
