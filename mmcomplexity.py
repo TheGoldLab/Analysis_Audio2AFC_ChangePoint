@@ -22,6 +22,20 @@ def check_valid_side(side):
     return None
 
 
+def check_valid_sequence_of_sides(sides):
+    """
+    Check that all elements in sides are valid sides
+
+    Args:
+        sides: a list of sides
+
+    Returns:
+
+    """
+    assert isinstance(sides, list)
+    _ = map(check_valid_side, sides)
+
+
 def switch_side(side):
     """
 
@@ -44,6 +58,8 @@ def switch_side(side):
 class Stimulus:
     """Define stimulus object, which is a sequence of consecutive trials"""
 
+    source_prior = {'left': 0.5, 'right': 0.5}
+
     likelihood_same_side = 0.8
     """Likelihood of a sound occurring on the same side as the source"""
 
@@ -58,7 +74,17 @@ class Stimulus:
         else:
             raise ValueError(f"Right now, only scalar hazard rate between 0 and 1 are accepted")
 
-        self.source_sequence = self.generate_source_sequence()
+        if sources is None:
+            self.source_sequence = self.generate_source_sequence()
+        else:
+            check_valid_sequence_of_sides(sources)
+            self.source_sequence = sources
+
+        if sounds is None:
+            self.sound_sequence = map(self._generate_sound_from_source, self.source_sequence)
+        else:
+            check_valid_sequence_of_sides(sounds)
+            self.sound_sequence = sounds
 
     def _generate_sound_from_source(self, source):
         """
@@ -76,8 +102,40 @@ class Stimulus:
 
         return source if same_side else switch_side(source)
 
-    def generate_source_sequence(self, init, hazard):
-        pass
+    def generate_source_sequence(self, init=None):
+        """
+        Generate a sequence of sources
+
+        todo: might be computationally inefficient
+
+        Args:
+            init: initial source side (should be member of SIDES). If None, picked according to prior
+
+        Returns: sequence of source sides
+
+        """
+        if init is None:
+            sides, prior = [], []
+
+            # for loop needed because SIDES is a set
+            for s in SIDES:
+                sides += [s]
+                prior += [self.source_prior[s]]
+
+            init = np.random.choice(sides, prior)
+
+        check_valid_side(init)
+        sequence = [init]
+        generated_trials = 1
+
+        while generated_trials < self.num_trials:
+            change_point = bernoulli.rvs(self.hazard)
+            last_source = sequence[-1]
+            new_source = switch_side(last_source) if change_point else last_source
+            sequence.append(new_source)
+            generated_trials += 1
+
+        return sequence
 
 
 class BinaryDecisionMaker:
@@ -94,7 +152,7 @@ class BinaryDecisionMaker:
     if not likelihoods_known:
         raise NotImplementedError
 
-    sources_prior = {'left':.5, 'right':.5}
+    sources_prior = {'left': .5, 'right': .5}
     """prior expectations about most likely side of a source"""
 
     def __init__(self, stimulus_object):
@@ -116,8 +174,8 @@ class BinaryDecisionMaker:
         Returns: list of perceived sound locations (which we call observations)
 
         """
-        # check all stimulus values are valid
-        _ = map(check_valid_side, list_of_sounds)  # exception raised if a stimulus is invalid
+
+        check_valid_sequence_of_sides(list_of_sounds)  # exception raised if a stimulus is invalid
 
         def apply_sensory_noise(side):
             """
@@ -146,8 +204,8 @@ class BinaryDecisionMaker:
         Returns: generator object for decisions
 
         """
-        # check all observations values are valid
-        _ = map(check_valid_side, observations)  # exception raised if a stimulus is invalid
+
+        check_valid_sequence_of_sides(observations)  # exception raised if a stimulus is invalid
 
         if hazard is None:
             hazard = self.stimulus_object.hazard
