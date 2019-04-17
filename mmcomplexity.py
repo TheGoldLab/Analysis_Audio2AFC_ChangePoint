@@ -81,10 +81,13 @@ class Stimulus:
             self.source_sequence = sources
 
         if sounds is None:
-            self.sound_sequence = map(self._generate_sound_from_source, self.source_sequence)
+            self.sound_sequence = list(map(self._generate_sound_from_source, self.source_sequence))
         else:
             check_valid_sequence_of_sides(sounds)
             self.sound_sequence = sounds
+
+    def __str__(self):
+        return f"object of type {self.__class__} \n sources: {self.source_sequence} \n sounds: {self.sound_sequence} \n"
 
     def _generate_sound_from_source(self, source):
         """
@@ -122,7 +125,7 @@ class Stimulus:
                 sides += [s]
                 prior += [self.source_prior[s]]
 
-            init = np.random.choice(sides, prior)
+            init = np.random.choice(sides, p=prior)
 
         check_valid_side(init)
         sequence = [init]
@@ -161,21 +164,24 @@ class BinaryDecisionMaker:
             stimulus_object: a stimulus object (instance of Stimulus)
         """
         self.stimulus_object = stimulus_object
+        self.observations = None  # will be set by the self.observe method
 
-    def observe(self, list_of_sounds):
+    def observe(self, list_of_sounds=None):
         """
         Generate subjective observations of a given stimulus
 
         todo: not clear yet whether list_of_sounds should be automatically extracted from the stimulus_object attribute
 
         Args:
-            list_of_sounds: list of sound locations (str)
+            list_of_sounds: list of sound locations (str). If None, uses self.stimulus_object.sound_sequence
 
-        Returns: list of perceived sound locations (which we call observations)
+        Returns: None. But sets self.observations
 
         """
-
-        check_valid_sequence_of_sides(list_of_sounds)  # exception raised if a stimulus is invalid
+        if list_of_sounds is None:
+            list_of_sounds = self.stimulus_object.sound_sequence
+        else:
+            check_valid_sequence_of_sides(list_of_sounds)  # exception raised if a stimulus is invalid
 
         def apply_sensory_noise(side):
             """
@@ -189,23 +195,27 @@ class BinaryDecisionMaker:
             """
             return switch_side(side) if bernoulli.rvs(self.mislocalization_noise) else side
 
-        return map(apply_sensory_noise, list_of_sounds)
+        self.observations = list(map(apply_sensory_noise, list_of_sounds))
 
-    def process(self, observations, hazard=None):
+        return None
+
+    def process(self, observations=None, hazard=None):
         """
         This is where the bulk of the decision process occurs. Observations are converted into a decision variable.
 
         For now, only the log posterior odds of the sources is computed, and hazard rate is assumed fixed.
 
         Args:
-            observations: sequence of perceived sound locations (list)
+            observations: sequence of perceived sound locations (list). If None, self.observations is used
             hazard: hazard rate, if None, the one from the stimulus_object attribute is fetched
 
         Returns: generator object for decisions
 
         """
-
-        check_valid_sequence_of_sides(observations)  # exception raised if a stimulus is invalid
+        if observations is None:
+            observations = self.observations
+        else:
+            check_valid_sequence_of_sides(observations)  # exception raised if a stimulus is invalid
 
         if hazard is None:
             hazard = self.stimulus_object.hazard
@@ -247,12 +257,12 @@ class BinaryDecisionMaker:
 
                 log_posterior_odds += jump + discount_old_evidence(log_posterior_odds)
 
-                yield self.decide(log_posterior_odds)
+                yield self._decide(log_posterior_odds)
                 decision_number += 1
 
-        return recursive_update
+        return recursive_update()
 
-    def decide(self, decision_variable):
+    def _decide(self, decision_variable):
         """
         Makes a decision on a single trial, based on the decision variable
 
