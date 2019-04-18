@@ -1,0 +1,216 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>BinaryDecisionMaker &#8212; mmcomplexity 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Stimulus" href="Python_modules.mmcomplexity.Stimulus.html" />
+    <link rel="prev" title="switch_side" href="Python_modules.mmcomplexity.switch_side.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="binarydecisionmaker">
+<h1>BinaryDecisionMaker<a class="headerlink" href="#binarydecisionmaker" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="Python_modules.mmcomplexity.BinaryDecisionMaker">
+<em class="property">class </em><code class="descclassname">Python_modules.mmcomplexity.</code><code class="descname">BinaryDecisionMaker</code><span class="sig-paren">(</span><em>stimulus_object</em><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.mmcomplexity.BinaryDecisionMaker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Simulate an observer performing our Auditory change-point 2AFC task</p>
+<p class="rubric">Attributes Summary</p>
+<table class="longtable docutils align-center">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Python_modules.mmcomplexity.BinaryDecisionMaker.bias" title="Python_modules.mmcomplexity.BinaryDecisionMaker.bias"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bias</span></code></a></p></td>
+<td><p>probability with which observer picks ‘right’ when guessing.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Python_modules.mmcomplexity.BinaryDecisionMaker.likelihoods_known" title="Python_modules.mmcomplexity.BinaryDecisionMaker.likelihoods_known"><code class="xref py py-obj docutils literal notranslate"><span class="pre">likelihoods_known</span></code></a></p></td>
+<td><p>if true, model uses true probability that the sound occurs on same side as source</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Python_modules.mmcomplexity.BinaryDecisionMaker.mislocalization_noise" title="Python_modules.mmcomplexity.BinaryDecisionMaker.mislocalization_noise"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mislocalization_noise</span></code></a></p></td>
+<td><p>probability with which the observer hears a tone on the wrong side</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Python_modules.mmcomplexity.BinaryDecisionMaker.sources_prior" title="Python_modules.mmcomplexity.BinaryDecisionMaker.sources_prior"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sources_prior</span></code></a></p></td>
+<td><p>prior expectations about most likely side of a source</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods Summary</p>
+<table class="longtable docutils align-center">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Python_modules.mmcomplexity.BinaryDecisionMaker.observe" title="Python_modules.mmcomplexity.BinaryDecisionMaker.observe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">observe</span></code></a>([list_of_sounds])</p></td>
+<td><p>Generate subjective observations of a given stimulus</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Python_modules.mmcomplexity.BinaryDecisionMaker.process" title="Python_modules.mmcomplexity.BinaryDecisionMaker.process"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process</span></code></a>([observations, hazard])</p></td>
+<td><p>This is where the bulk of the decision process occurs.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes Documentation</p>
+<dl class="attribute">
+<dt id="Python_modules.mmcomplexity.BinaryDecisionMaker.bias">
+<code class="descname">bias</code><em class="property"> = 0.5</em><a class="headerlink" href="#Python_modules.mmcomplexity.BinaryDecisionMaker.bias" title="Permalink to this definition">¶</a></dt>
+<dd><p>probability with which observer picks ‘right’ when guessing. Unbiased corresponds to 0.5</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Python_modules.mmcomplexity.BinaryDecisionMaker.likelihoods_known">
+<code class="descname">likelihoods_known</code><em class="property"> = True</em><a class="headerlink" href="#Python_modules.mmcomplexity.BinaryDecisionMaker.likelihoods_known" title="Permalink to this definition">¶</a></dt>
+<dd><p>if true, model uses true probability that the sound occurs on same side as source</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Python_modules.mmcomplexity.BinaryDecisionMaker.mislocalization_noise">
+<code class="descname">mislocalization_noise</code><em class="property"> = 0</em><a class="headerlink" href="#Python_modules.mmcomplexity.BinaryDecisionMaker.mislocalization_noise" title="Permalink to this definition">¶</a></dt>
+<dd><p>probability with which the observer hears a tone on the wrong side</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Python_modules.mmcomplexity.BinaryDecisionMaker.sources_prior">
+<code class="descname">sources_prior</code><em class="property"> = {'left': 0.5, 'right': 0.5}</em><a class="headerlink" href="#Python_modules.mmcomplexity.BinaryDecisionMaker.sources_prior" title="Permalink to this definition">¶</a></dt>
+<dd><p>prior expectations about most likely side of a source</p>
+</dd></dl>
+
+<p class="rubric">Methods Documentation</p>
+<dl class="method">
+<dt id="Python_modules.mmcomplexity.BinaryDecisionMaker.observe">
+<code class="descname">observe</code><span class="sig-paren">(</span><em>list_of_sounds=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.mmcomplexity.BinaryDecisionMaker.observe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate subjective observations of a given stimulus</p>
+<p>todo: not clear yet whether list_of_sounds should be automatically extracted from the stimulus_object attribute</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>list_of_sounds: list of sound locations (str). If None, uses self.stimulus_object.sound_sequence</p>
+</dd>
+</dl>
+<p>Returns: None. But sets self.observations</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Python_modules.mmcomplexity.BinaryDecisionMaker.process">
+<code class="descname">process</code><span class="sig-paren">(</span><em>observations=None</em>, <em>hazard=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.mmcomplexity.BinaryDecisionMaker.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is where the bulk of the decision process occurs. Observations are converted into a decision variable.</p>
+<p>For now, only the log posterior odds of the sources is computed, and hazard rate is assumed fixed.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>observations: sequence of perceived sound locations (list). If None, self.observations is used
+hazard: hazard rate, if None, the one from the stimulus_object attribute is fetched</p>
+</dd>
+</dl>
+<p>Returns: generator object for decisions</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">mmcomplexity</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../includeme.html">Audio_2AFC_Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../includeme.html#repository-structure">Repository Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../includeme.html#development-workflow">Development Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../includeme.html#reproduce-our-conda-environment">Reproduce Our <code class="docutils literal notranslate"><span class="pre">conda</span></code> Environment</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../module_documentation.html">Python_modules.mmcomplexity Module</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../module_documentation.html#functions">Functions</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../module_documentation.html#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module_documentation.html#variables">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module_documentation.html#class-inheritance-diagram">Class Inheritance Diagram</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../module_documentation.html">Python_modules.mmcomplexity Module</a><ul>
+      <li>Previous: <a href="Python_modules.mmcomplexity.switch_side.html" title="previous chapter">switch_side</a></li>
+      <li>Next: <a href="Python_modules.mmcomplexity.Stimulus.html" title="next chapter">Stimulus</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Adrian Radillo, Alexandre Filipowicz.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/api/Python_modules.mmcomplexity.BinaryDecisionMaker.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

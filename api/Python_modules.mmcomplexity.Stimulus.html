@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Stimulus &#8212; mmcomplexity 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="SIDES" href="Python_modules.mmcomplexity.SIDES.html" />
+    <link rel="prev" title="BinaryDecisionMaker" href="Python_modules.mmcomplexity.BinaryDecisionMaker.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="stimulus">
+<h1>Stimulus<a class="headerlink" href="#stimulus" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="Python_modules.mmcomplexity.Stimulus">
+<em class="property">class </em><code class="descclassname">Python_modules.mmcomplexity.</code><code class="descname">Stimulus</code><span class="sig-paren">(</span><em>num_trials</em>, <em>hazard</em>, <em>sources=None</em>, <em>sounds=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.mmcomplexity.Stimulus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Define stimulus object, which is a sequence of consecutive trials</p>
+<p class="rubric">Attributes Summary</p>
+<table class="longtable docutils align-center">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Python_modules.mmcomplexity.Stimulus.likelihood_same_side" title="Python_modules.mmcomplexity.Stimulus.likelihood_same_side"><code class="xref py py-obj docutils literal notranslate"><span class="pre">likelihood_same_side</span></code></a></p></td>
+<td><p>Likelihood of a sound occurring on the same side as the source</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Python_modules.mmcomplexity.Stimulus.source_prior" title="Python_modules.mmcomplexity.Stimulus.source_prior"><code class="xref py py-obj docutils literal notranslate"><span class="pre">source_prior</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods Summary</p>
+<table class="longtable docutils align-center">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Python_modules.mmcomplexity.Stimulus.generate_source_sequence" title="Python_modules.mmcomplexity.Stimulus.generate_source_sequence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_source_sequence</span></code></a>([init])</p></td>
+<td><p>Generate a sequence of sources</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes Documentation</p>
+<dl class="attribute">
+<dt id="Python_modules.mmcomplexity.Stimulus.likelihood_same_side">
+<code class="descname">likelihood_same_side</code><em class="property"> = 0.8</em><a class="headerlink" href="#Python_modules.mmcomplexity.Stimulus.likelihood_same_side" title="Permalink to this definition">¶</a></dt>
+<dd><p>Likelihood of a sound occurring on the same side as the source</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Python_modules.mmcomplexity.Stimulus.source_prior">
+<code class="descname">source_prior</code><em class="property"> = {'left': 0.5, 'right': 0.5}</em><a class="headerlink" href="#Python_modules.mmcomplexity.Stimulus.source_prior" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Methods Documentation</p>
+<dl class="method">
+<dt id="Python_modules.mmcomplexity.Stimulus.generate_source_sequence">
+<code class="descname">generate_source_sequence</code><span class="sig-paren">(</span><em>init=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.mmcomplexity.Stimulus.generate_source_sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a sequence of sources</p>
+<p>todo: might be computationally inefficient</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>init: initial source side (should be member of SIDES). If None, picked according to prior</p>
+</dd>
+</dl>
+<p>Returns: sequence of source sides</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">mmcomplexity</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../includeme.html">Audio_2AFC_Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../includeme.html#repository-structure">Repository Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../includeme.html#development-workflow">Development Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../includeme.html#reproduce-our-conda-environment">Reproduce Our <code class="docutils literal notranslate"><span class="pre">conda</span></code> Environment</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../module_documentation.html">Python_modules.mmcomplexity Module</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../module_documentation.html#functions">Functions</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../module_documentation.html#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module_documentation.html#variables">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module_documentation.html#class-inheritance-diagram">Class Inheritance Diagram</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../module_documentation.html">Python_modules.mmcomplexity Module</a><ul>
+      <li>Previous: <a href="Python_modules.mmcomplexity.BinaryDecisionMaker.html" title="previous chapter">BinaryDecisionMaker</a></li>
+      <li>Next: <a href="Python_modules.mmcomplexity.SIDES.html" title="next chapter">SIDES</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Adrian Radillo, Alexandre Filipowicz.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/api/Python_modules.mmcomplexity.Stimulus.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
