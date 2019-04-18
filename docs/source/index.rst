@@ -12,6 +12,8 @@ Welcome to mmcomplexity's documentation!
 
    includeme
 
+   module_documentation
+
 Indices and tables
 ==================
 

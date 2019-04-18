@@ -39,5 +39,3 @@ Reproduce Our ``conda`` Environment
 .. note::
     If your newly created environment doesn't show up in your list of Jupyter kernels, follow `these steps <https://stackoverflow.com/a/44786736>`_.
 
-.. automodapi:: Python_modules.mmcomplexity
-    :include_all_objects:
