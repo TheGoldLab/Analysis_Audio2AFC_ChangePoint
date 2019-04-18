@@ -1,5 +1,6 @@
 name: mmcomplexity
 channels:
+  - astropy
   - conda-forge
   - defaults
 dependencies:
@@ -108,6 +109,7 @@ dependencies:
   - six=1.12.0=py37_1000
   - snowballstemmer=1.2.1=py_1
   - sphinx=2.0.0=py_2
+  - sphinx-automodapi=0.10=py_0
   - sphinxcontrib-applehelp=1.0.1=py_0
   - sphinxcontrib-devhelp=1.0.1=py_0
   - sphinxcontrib-htmlhelp=1.0.1=py_0
@@ -130,3 +132,5 @@ dependencies:
   - yaml=0.1.7=h14c3975_1001
   - zeromq=4.2.5=hf484d3e_1006
   - zlib=1.2.11=h14c3975_1004
+prefix: /home/adrian/anaconda3/envs/mmcomplexity
+
