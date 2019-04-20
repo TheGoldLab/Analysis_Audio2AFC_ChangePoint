@@ -19,7 +19,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Stimulus" href="Python_modules.mmcomplexity.Stimulus.html" />
-    <link rel="prev" title="switch_side" href="Python_modules.mmcomplexity.switch_side.html" /> 
+    <link rel="prev" title="Audio2AFCSimulation" href="Python_modules.mmcomplexity.Audio2AFCSimulation.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -34,7 +34,7 @@
           <a href="Python_modules.mmcomplexity.Stimulus.html" title="Stimulus"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="Python_modules.mmcomplexity.switch_side.html" title="switch_side"
+          <a href="Python_modules.mmcomplexity.Audio2AFCSimulation.html" title="Audio2AFCSimulation"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">mmcomplexity 0.0.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../module_documentation.html" accesskey="U">Python_modules.mmcomplexity Module</a> &#187;</li> 
@@ -121,10 +121,11 @@
 <dd><p>Generate subjective observations of a given stimulus</p>
 <p>todo: not clear yet whether list_of_sounds should be automatically extracted from the stimulus_object attribute</p>
 <dl class="simple">
-<dt>Args:</dt><dd><p>list_of_sounds: list of sound locations (str). If None, uses self.stimulus_object.sound_sequence</p>
+<dt>Args:</dt><dd><p>list_of_sounds (list): list of sound locations (str). If None, uses self.stimulus_object.sound_sequence</p>
+</dd>
+<dt>Returns:</dt><dd><p>None: But sets self.observations</p>
 </dd>
 </dl>
-<p>Returns: None. But sets self.observations</p>
 </dd></dl>
 
 <dl class="method">
@@ -133,11 +134,12 @@
 <dd><p>This is where the bulk of the decision process occurs. Observations are converted into a decision variable.</p>
 <p>For now, only the log posterior odds of the sources is computed, and hazard rate is assumed fixed.</p>
 <dl class="simple">
-<dt>Args:</dt><dd><p>observations: sequence of perceived sound locations (list). If None, self.observations is used
+<dt>Args:</dt><dd><p>observations (list): sequence of perceived sound locations. If None, self.observations is used
 hazard: hazard rate, if None, the one from the stimulus_object attribute is fetched</p>
 </dd>
+<dt>Returns:</dt><dd><p>generator object for decisions</p>
+</dd>
 </dl>
-<p>Returns: generator object for decisions</p>
 </dd></dl>
 
 </dd></dl>
@@ -151,8 +153,8 @@ hazard: hazard rate, if None, the one from the stimulus_object attribute is fetc
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="Python_modules.mmcomplexity.switch_side.html"
-                        title="previous chapter">switch_side</a></p>
+  <p class="topless"><a href="Python_modules.mmcomplexity.Audio2AFCSimulation.html"
+                        title="previous chapter">Audio2AFCSimulation</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="Python_modules.mmcomplexity.Stimulus.html"
                         title="next chapter">Stimulus</a></p>
@@ -190,7 +192,7 @@ hazard: hazard rate, if None, the one from the stimulus_object attribute is fetc
           <a href="Python_modules.mmcomplexity.Stimulus.html" title="Stimulus"
              >next</a> |</li>
         <li class="right" >
-          <a href="Python_modules.mmcomplexity.switch_side.html" title="switch_side"
+          <a href="Python_modules.mmcomplexity.Audio2AFCSimulation.html" title="Audio2AFCSimulation"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">mmcomplexity 0.0.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../module_documentation.html" >Python_modules.mmcomplexity Module</a> &#187;</li> 
