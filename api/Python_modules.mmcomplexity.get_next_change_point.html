@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Audio2AFCSimulation &#8212; mmcomplexity 0.0.1 documentation</title>
+    <title>get_next_change_point &#8212; mmcomplexity 0.0.1 documentation</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -18,8 +18,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="BinaryDecisionMaker" href="Python_modules.mmcomplexity.BinaryDecisionMaker.html" />
-    <link rel="prev" title="switch_side" href="Python_modules.mmcomplexity.switch_side.html" /> 
+    <link rel="next" title="switch_side" href="Python_modules.mmcomplexity.switch_side.html" />
+    <link rel="prev" title="check_valid_side" href="Python_modules.mmcomplexity.check_valid_side.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -31,10 +31,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="Python_modules.mmcomplexity.BinaryDecisionMaker.html" title="BinaryDecisionMaker"
+          <a href="Python_modules.mmcomplexity.switch_side.html" title="switch_side"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="Python_modules.mmcomplexity.switch_side.html" title="switch_side"
+          <a href="Python_modules.mmcomplexity.check_valid_side.html" title="check_valid_side"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">mmcomplexity 0.0.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../module_documentation.html" accesskey="U">Python_modules.mmcomplexity Module</a> &#187;</li> 
@@ -46,13 +46,19 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="audio2afcsimulation">
-<h1>Audio2AFCSimulation<a class="headerlink" href="#audio2afcsimulation" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="Python_modules.mmcomplexity.Audio2AFCSimulation">
-<em class="property">class </em><code class="descclassname">Python_modules.mmcomplexity.</code><code class="descname">Audio2AFCSimulation</code><span class="sig-paren">(</span><em>tot_trials</em>, <em>h_values</em>, <em>meta_k</em>, <em>meta_prior_h</em><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.mmcomplexity.Audio2AFCSimulation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Use this class to launch simulations of our models</p>
+  <div class="section" id="get-next-change-point">
+<h1>get_next_change_point<a class="headerlink" href="#get-next-change-point" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="Python_modules.mmcomplexity.get_next_change_point">
+<code class="descclassname">Python_modules.mmcomplexity.</code><code class="descname">get_next_change_point</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.mmcomplexity.get_next_change_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sample from geometric distribution to tell us when the next change point will occur</p>
+<p>See <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.geometric.html">doc</a> if unclear</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>p: Bernoulli parameter between 0 and 1</p>
+</dd>
+<dt>Returns:</dt><dd><p>int: time step in the future for occurrence of first success (starts counting at 1)</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -64,15 +70,15 @@
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="Python_modules.mmcomplexity.switch_side.html"
-                        title="previous chapter">switch_side</a></p>
+  <p class="topless"><a href="Python_modules.mmcomplexity.check_valid_side.html"
+                        title="previous chapter">check_valid_side</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="Python_modules.mmcomplexity.BinaryDecisionMaker.html"
-                        title="next chapter">BinaryDecisionMaker</a></p>
+  <p class="topless"><a href="Python_modules.mmcomplexity.switch_side.html"
+                        title="next chapter">switch_side</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/api/Python_modules.mmcomplexity.Audio2AFCSimulation.rst.txt"
+      <li><a href="../_sources/api/Python_modules.mmcomplexity.get_next_change_point.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -100,10 +106,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="Python_modules.mmcomplexity.BinaryDecisionMaker.html" title="BinaryDecisionMaker"
+          <a href="Python_modules.mmcomplexity.switch_side.html" title="switch_side"
              >next</a> |</li>
         <li class="right" >
-          <a href="Python_modules.mmcomplexity.switch_side.html" title="switch_side"
+          <a href="Python_modules.mmcomplexity.check_valid_side.html" title="check_valid_side"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">mmcomplexity 0.0.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../module_documentation.html" >Python_modules.mmcomplexity Module</a> &#187;</li> 

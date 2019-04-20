@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Stimulus &#8212; mmcomplexity 0.0.1 documentation</title>
+    <title>StimulusBlock &#8212; mmcomplexity 0.0.1 documentation</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -46,13 +46,13 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="stimulus">
-<h1>Stimulus<a class="headerlink" href="#stimulus" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="stimulusblock">
+<h1>StimulusBlock<a class="headerlink" href="#stimulusblock" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="Python_modules.mmcomplexity.Stimulus">
-<em class="property">class </em><code class="descclassname">Python_modules.mmcomplexity.</code><code class="descname">Stimulus</code><span class="sig-paren">(</span><em>num_trials</em>, <em>hazard</em>, <em>sources=None</em>, <em>sounds=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.mmcomplexity.Stimulus" title="Permalink to this definition">¶</a></dt>
+<dt id="Python_modules.mmcomplexity.StimulusBlock">
+<em class="property">class </em><code class="descclassname">Python_modules.mmcomplexity.</code><code class="descname">StimulusBlock</code><span class="sig-paren">(</span><em>num_trials</em>, <em>hazard</em>, <em>first_source=None</em>, <em>sources=None</em>, <em>sounds=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.mmcomplexity.StimulusBlock" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Define stimulus object, which is a sequence of consecutive trials</p>
+<p>Define stimulus for a block of trials in which hazard rate is fixed</p>
 <p class="rubric">Attributes Summary</p>
 <table class="longtable docutils align-center">
 <colgroup>
@@ -60,10 +60,10 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#Python_modules.mmcomplexity.Stimulus.likelihood_same_side" title="Python_modules.mmcomplexity.Stimulus.likelihood_same_side"><code class="xref py py-obj docutils literal notranslate"><span class="pre">likelihood_same_side</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Python_modules.mmcomplexity.StimulusBlock.likelihood_same_side" title="Python_modules.mmcomplexity.StimulusBlock.likelihood_same_side"><code class="xref py py-obj docutils literal notranslate"><span class="pre">likelihood_same_side</span></code></a></p></td>
 <td><p>Likelihood of a sound occurring on the same side as the source</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#Python_modules.mmcomplexity.Stimulus.source_prior" title="Python_modules.mmcomplexity.Stimulus.source_prior"><code class="xref py py-obj docutils literal notranslate"><span class="pre">source_prior</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#Python_modules.mmcomplexity.StimulusBlock.source_prior" title="Python_modules.mmcomplexity.StimulusBlock.source_prior"><code class="xref py py-obj docutils literal notranslate"><span class="pre">source_prior</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -75,27 +75,27 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#Python_modules.mmcomplexity.Stimulus.generate_source_sequence" title="Python_modules.mmcomplexity.Stimulus.generate_source_sequence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_source_sequence</span></code></a>([init])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Python_modules.mmcomplexity.StimulusBlock.generate_source_sequence" title="Python_modules.mmcomplexity.StimulusBlock.generate_source_sequence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_source_sequence</span></code></a>([init])</p></td>
 <td><p>Generate a sequence of sources</p></td>
 </tr>
 </tbody>
 </table>
 <p class="rubric">Attributes Documentation</p>
 <dl class="attribute">
-<dt id="Python_modules.mmcomplexity.Stimulus.likelihood_same_side">
-<code class="descname">likelihood_same_side</code><em class="property"> = 0.8</em><a class="headerlink" href="#Python_modules.mmcomplexity.Stimulus.likelihood_same_side" title="Permalink to this definition">¶</a></dt>
+<dt id="Python_modules.mmcomplexity.StimulusBlock.likelihood_same_side">
+<code class="descname">likelihood_same_side</code><em class="property"> = 0.8</em><a class="headerlink" href="#Python_modules.mmcomplexity.StimulusBlock.likelihood_same_side" title="Permalink to this definition">¶</a></dt>
 <dd><p>Likelihood of a sound occurring on the same side as the source</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="Python_modules.mmcomplexity.Stimulus.source_prior">
-<code class="descname">source_prior</code><em class="property"> = {'left': 0.5, 'right': 0.5}</em><a class="headerlink" href="#Python_modules.mmcomplexity.Stimulus.source_prior" title="Permalink to this definition">¶</a></dt>
+<dt id="Python_modules.mmcomplexity.StimulusBlock.source_prior">
+<code class="descname">source_prior</code><em class="property"> = {'left': 0.5, 'right': 0.5}</em><a class="headerlink" href="#Python_modules.mmcomplexity.StimulusBlock.source_prior" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p class="rubric">Methods Documentation</p>
 <dl class="method">
-<dt id="Python_modules.mmcomplexity.Stimulus.generate_source_sequence">
-<code class="descname">generate_source_sequence</code><span class="sig-paren">(</span><em>init=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.mmcomplexity.Stimulus.generate_source_sequence" title="Permalink to this definition">¶</a></dt>
+<dt id="Python_modules.mmcomplexity.StimulusBlock.generate_source_sequence">
+<code class="descname">generate_source_sequence</code><span class="sig-paren">(</span><em>init=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.mmcomplexity.StimulusBlock.generate_source_sequence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate a sequence of sources</p>
 <p>todo: might be computationally inefficient</p>
 <dl class="simple">
@@ -125,7 +125,7 @@
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/api/Python_modules.mmcomplexity.Stimulus.rst.txt"
+      <li><a href="../_sources/api/Python_modules.mmcomplexity.StimulusBlock.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
