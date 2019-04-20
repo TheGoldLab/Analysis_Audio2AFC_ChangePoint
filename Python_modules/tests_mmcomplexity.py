@@ -4,7 +4,10 @@ Main reference: https://docs.python.org/3/library/unittest.html#unittest.TestCas
 """
 import unittest
 import types
-import mmcomplexity as mmx
+try:
+    import mmcomplexity as mmx
+except ModuleNotFoundError:  # this is for sphinx
+    import Python_modules.mmcomplexity as mmx
 
 
 class TestModuleFunctions(unittest.TestCase):
@@ -33,7 +36,7 @@ class TestStimulusBlock(unittest.TestCase):
     def setUp(self):
         self.n = 10  # number of trials to generate
         self.h = 0.3 # hazard rate
-        self.stim = mmx.Stimulus(self.n, self.h)
+        self.stim = mmx.StimulusBlock(self.n, self.h)
 
     def tearDown(self):
         del self.n
@@ -50,9 +53,9 @@ class TestStimulusBlock(unittest.TestCase):
         bad_h = [-1, 12, [.2,.3]]
         good_h = [0, 1, 3/4]
         for h in bad_h:
-            self.assertRaises(ValueError, mmx.Stimulus, 10, h)
+            self.assertRaises(ValueError, mmx.StimulusBlock, 10, h)
         for h in good_h:
-            _ = mmx.Stimulus(10, h)
+            _ = mmx.StimulusBlock(10, h)
 
     def test_sequences_are_lists(self):
         self.assertIsInstance(self.stim.source_sequence, list)
@@ -62,7 +65,7 @@ class TestStimulusBlock(unittest.TestCase):
 class TestIdealObserverModel(unittest.TestCase):
     def setUp(self):
         self.n = 10
-        self.s = mmx.Stimulus(self.n, .3)
+        self.s = mmx.StimulusBlock(self.n, .3)
         self.o = mmx.BinaryDecisionMaker(self.s)
 
     def tearDown(self):
@@ -88,10 +91,17 @@ class TestIdealObserverModel(unittest.TestCase):
         self.assertIsInstance(first_item, tuple)
 
 
+class TestSimulation(unittest.TestCase):
+    def setUp(self):
+        self.tot_trials, self.h_values, self.meta_k, self.meta_prior_h = 100, [.01, .99], .2, [.2, .8]
+        self.sim = mmx.Audio2AFCSimulation(self.tot_trials, self.h_values, self.meta_k, self.meta_prior_h)
 
+    def tearDown(self):
+        del self.tot_trials, self.h_values, self.meta_k, self.meta_prior_h, self.sim
 
-
-
+    def test_generate_stimulus_blocks(self):
+        blocks = self.sim.generate_stimulus_blocks()
+        self.assertIsInstance(blocks, types.GeneratorType)
 
 
 if __name__ == '__main__':

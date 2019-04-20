@@ -2,6 +2,7 @@
 Python module to analyze mental model comlexity in our Auditory change-point task
 """
 import numpy as np
+import pandas as pd
 from scipy.stats import bernoulli
 
 SIDES = {'left', 'right'}
@@ -60,15 +61,30 @@ def switch_side(side):
     return opposite_side
 
 
-class Stimulus:
-    """Define stimulus object, which is a sequence of consecutive trials"""
+def get_next_change_point(p):
+    """
+    Sample from geometric distribution to tell us when the next change point will occur
+
+    See `doc <https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.geometric.html>`_ if unclear
+
+    Args:
+        p: Bernoulli parameter between 0 and 1
+
+    Returns:
+        int: time step in the future for occurrence of first success (starts counting at 1)
+    """
+    return np.random.geometric(p)
+
+
+class StimulusBlock:
+    """Define stimulus for a block of trials in which hazard rate is fixed"""
 
     source_prior = {'left': 0.5, 'right': 0.5}
 
     likelihood_same_side = 0.8
     """Likelihood of a sound occurring on the same side as the source"""
 
-    def __init__(self, num_trials, hazard, sources=None, sounds=None):
+    def __init__(self, num_trials, hazard, first_source=None, sources=None, sounds=None):
         self.num_trials = num_trials
 
         if isinstance(hazard, float) or isinstance(hazard, int):
@@ -80,7 +96,7 @@ class Stimulus:
             raise ValueError(f"Right now, only scalara float or int hazard rate between 0 and 1 are accepted")
 
         if sources is None:
-            self.source_sequence = self.generate_source_sequence()
+            self.source_sequence = self.generate_source_sequence(first_source)
         else:
             check_valid_sequence_of_sides(sources)
             self.source_sequence = sources
@@ -168,7 +184,7 @@ class BinaryDecisionMaker:
     def __init__(self, stimulus_object):
         """
         Args:
-            stimulus_object (Stimulus): a stimulus object
+            stimulus_object (StimulusBlock): a stimulus with fixed hazard rate
         """
         self.stimulus_object = stimulus_object
         self.observations = None  # will be set by the self.observe method
@@ -300,10 +316,106 @@ class Audio2AFCSimulation:
 
     def __init__(self, tot_trials, h_values, meta_k, meta_prior_h):
         self.tot_trials = tot_trials
+
         assert isinstance(self.tot_trials, int) and self.tot_trials > 0
+
+        # the following line implicitly checks that h_values is not a flot nor an int
+        # i.e. raises TypeError.
+        assert len(h_values) == len(meta_prior_h)
+
+        self.h_values = h_values
+        self.meta_k = meta_k
+        self.meta_prior_h = meta_prior_h
+
+        # todo: not sure yet how to handle blocks of stimuli and observer
         # self.stimulus
         # self.observer
-        # self.data
 
+        sources, sounds, hazards = [], [], []
 
+        for block in self.generate_stimulus_blocks():
+            sources += block.source_sequence
+            sounds += block.sound_sequence
+            hazards += [block.hazard] * block.num_trials
 
+        self.data = pd.DataFrame({
+            'source': sources,
+            'sound': sounds,
+            'hazard': hazards,
+            })
+
+    def generate_stimulus_blocks(self):
+        """
+        generate consecutive blocks of stimulus in which hazard rate is constant
+
+        The hazard rate at the beginning of each block is sampled from self.meta_prior_h, excluding the hazard rate from
+        the previous block. For the first block, no hazard rate value is excluded.
+        The first source of each block is sampled by applying the new hazard rate to the last source from the previous
+        block. For the very first block, the source is sampled from StimulusBlock.source_prior
+
+        Returns:
+            generator object that yields StimulusBlock objects
+        """
+        trials_generated = 0  # counter
+
+        # initialize hazard rate and source for first trial of first block. None defaults to sampling from priors
+        hazard = None
+        first_source, last_source = None, None
+
+        while trials_generated < self.tot_trials:
+
+            # sample new hazard
+            hazard = self.sample_meta_prior_h(hazard)
+
+            # sample block length (sequence of trials with fixed hazard rate)
+            block_length = get_next_change_point(self.meta_k)
+
+            # reduce block_length if overshoot
+            if block_length + trials_generated > self.tot_trials:
+                block_length = self.tot_trials - trials_generated
+
+            # pick first source of new block
+            if last_source is not None:
+                first_source = switch_side(last_source) if bernoulli.rvs(hazard) else last_source
+
+            # generate the new block
+            block = StimulusBlock(block_length, hazard, first_source=first_source)
+
+            # what the generator yields
+            yield block
+
+            # update the counter
+            trials_generated += block_length
+
+            # update last source from last block (for next iteration of loop)
+            last_source = block.source_sequence[-1]
+
+    def sample_meta_prior_h(self, current_h=None):
+        """
+        Sample a new hazard rate value from the hyper-prior, excluding the current_h
+
+        todo: check that the sampling statistics are the desired ones
+
+        Args:
+            current_h (int or float): if None, no value of h is excluded from the sampling set
+
+        Returns:
+            a sample from self.h_values, excluding current_h
+
+        """
+        if current_h is None:
+            values, prior = self.h_values, self.meta_prior_h
+        else:
+            assert current_h in self.h_values
+            values, prior = [], []
+            normalization_constant = 0
+            for j, h in enumerate(self.h_values):
+                if h != current_h:
+                    values.append(h)
+                    p = self.meta_prior_h[j]
+                    prior.append(p)
+                    normalization_constant += p
+            # normalize prior so that it adds up to 1
+            prior = list(map(lambda x: x / normalization_constant, prior))
+
+        return np.random.choice(values, p=prior)
