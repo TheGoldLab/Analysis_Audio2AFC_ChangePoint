@@ -71,13 +71,13 @@ class Stimulus:
     def __init__(self, num_trials, hazard, sources=None, sounds=None):
         self.num_trials = num_trials
 
-        if isinstance(hazard, float):
+        if isinstance(hazard, float) or isinstance(hazard, int):
             if 0 <= hazard <= 1:
                 self.hazard = hazard
             else:
                 raise ValueError(f"hazard rate should be between 0 and 1")
         else:
-            raise ValueError(f"Right now, only scalar hazard rate between 0 and 1 are accepted")
+            raise ValueError(f"Right now, only scalara float or int hazard rate between 0 and 1 are accepted")
 
         if sources is None:
             self.source_sequence = self.generate_source_sequence()
@@ -219,7 +219,7 @@ class BinaryDecisionMaker:
             hazard: hazard rate, if None, the one from the stimulus_object attribute is fetched
 
         Returns:
-            generator object for decisions
+            generator object that yields (log posterior odds, decisions)
 
         """
         if observations is None:
@@ -229,7 +229,7 @@ class BinaryDecisionMaker:
 
         if hazard is None:
             hazard = self.stimulus_object.hazard
-        assert isinstance(hazard, float) and (0 <= hazard <= 1)
+        assert (isinstance(hazard, float) or isinstance(hazard, int)) and (0 <= hazard <= 1)
 
         prob_same_side = self.stimulus_object.likelihood_same_side
 
@@ -268,7 +268,7 @@ class BinaryDecisionMaker:
 
                 log_posterior_odds += jump + discount_old_evidence(log_posterior_odds)
 
-                yield self._decide(log_posterior_odds)
+                yield log_posterior_odds, self._decide(log_posterior_odds)
                 decision_number += 1
 
         return recursive_update()
@@ -297,4 +297,13 @@ class Audio2AFCSimulation:
     """
     Use this class to launch simulations of our models
     """
-    pass
+
+    def __init__(self, tot_trials, h_values, meta_k, meta_prior_h):
+        self.tot_trials = tot_trials
+        assert isinstance(self.tot_trials, int) and self.tot_trials > 0
+        # self.stimulus
+        # self.observer
+        # self.data
+
+
+
