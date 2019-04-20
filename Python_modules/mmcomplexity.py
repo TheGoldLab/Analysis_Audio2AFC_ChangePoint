@@ -5,6 +5,7 @@ import numpy as np
 from scipy.stats import bernoulli
 
 SIDES = {'left', 'right'}
+"""set of allowed sides"""
 
 
 def check_valid_side(side):
@@ -12,10 +13,12 @@ def check_valid_side(side):
     Check that side is in the allowed set of sides
 
     Args:
-        side: (str) usually either 'left' or 'right'
-
-    Returns: None if side is valid. Otherwise raises ValueError
-
+        side (str): usually either 'left' or 'right'
+    Raises:
+        ValueError: if side is hashable but invalid
+        TypeError: if side is not hashable
+    Returns:
+        None: if side is valid.
     """
     if side not in SIDES:
         raise ValueError(f"{side} is not a valid side")
@@ -27,7 +30,7 @@ def check_valid_sequence_of_sides(sides):
     Check that all elements in sides are valid sides
 
     Args:
-        sides: a list of sides
+        sides (list): list of sides
 
     Returns:
 
@@ -40,9 +43,11 @@ def switch_side(side):
     """
 
     Args:
-        side: (str) either 'left' or 'right'
-
-    Returns: The opposite side
+        side (str):  an element of SIDES representing the side we want to switch from
+    Raises:
+        RunTimeError: if len(SIDES) != 2
+    Returns:
+        str: The opposite side
 
     """
 
@@ -94,9 +99,10 @@ class Stimulus:
         Generates a random sound location for a given source
 
         Args:
-            source: (str) either 'left' or 'right'
+            source (str): an element from SIDES
 
-        Returns: (str) either 'left' or 'right'
+        Returns:
+            str: a side
 
         """
         check_valid_side(source)
@@ -114,7 +120,8 @@ class Stimulus:
         Args:
             init: initial source side (should be member of SIDES). If None, picked according to prior
 
-        Returns: sequence of source sides
+        Returns:
+            sequence of source sides
 
         """
         if init is None:
@@ -161,7 +168,7 @@ class BinaryDecisionMaker:
     def __init__(self, stimulus_object):
         """
         Args:
-            stimulus_object: a stimulus object (instance of Stimulus)
+            stimulus_object (Stimulus): a stimulus object
         """
         self.stimulus_object = stimulus_object
         self.observations = None  # will be set by the self.observe method
@@ -173,9 +180,10 @@ class BinaryDecisionMaker:
         todo: not clear yet whether list_of_sounds should be automatically extracted from the stimulus_object attribute
 
         Args:
-            list_of_sounds: list of sound locations (str). If None, uses self.stimulus_object.sound_sequence
+            list_of_sounds (list): list of sound locations (str). If None, uses self.stimulus_object.sound_sequence
 
-        Returns: None. But sets self.observations
+        Returns:
+            None: But sets self.observations
 
         """
         if list_of_sounds is None:
@@ -188,9 +196,10 @@ class BinaryDecisionMaker:
             Intermediate function that switches sound location according to sensory noise
 
             Args:
-                side: (str) a member of global set SIDES
+                side (str): a member of SIDES
 
-            Returns: perceived side after sensory noise is applied
+            Returns:
+                perceived side after sensory noise is applied
 
             """
             return switch_side(side) if bernoulli.rvs(self.mislocalization_noise) else side
@@ -206,10 +215,11 @@ class BinaryDecisionMaker:
         For now, only the log posterior odds of the sources is computed, and hazard rate is assumed fixed.
 
         Args:
-            observations: sequence of perceived sound locations (list). If None, self.observations is used
+            observations (list): sequence of perceived sound locations. If None, self.observations is used
             hazard: hazard rate, if None, the one from the stimulus_object attribute is fetched
 
-        Returns: generator object for decisions
+        Returns:
+            generator object for decisions
 
         """
         if observations is None:
@@ -235,7 +245,8 @@ class BinaryDecisionMaker:
             Args:
                 y: evidence (log posterior odds) of previous time step
 
-            Returns: float - positive favors 'right', negative 'left'
+            Returns:
+                float: positive favors 'right', negative 'left'
 
             """
             numerator = hazard * np.exp(-y) + 1 - hazard
@@ -269,7 +280,8 @@ class BinaryDecisionMaker:
         Args:
             decision_variable: for now, log posterior odds
 
-        Returns: (str) an element from SIDES
+        Returns:
+            str: an element from SIDES
 
         """
         s = np.sign(decision_variable)
@@ -279,3 +291,10 @@ class BinaryDecisionMaker:
             return 'right'
         elif s == 0:
             return 1 if bernoulli.rvs(self.bias) else 0
+
+
+class Audio2AFCSimulation:
+    """
+    Use this class to launch simulations of our models
+    """
+    pass
