@@ -118,9 +118,13 @@ def get_next_change_point(p):
         p: Bernoulli parameter between 0 and 1
 
     Returns:
-        int: time step in the future for occurrence of first success (starts counting at 1)
+        int: if p>0 time step in the future for occurrence of first success (starts counting at 1)
+        numpy.inf: if p==0
     """
-    return np.random.geometric(p)
+    if p == 0:
+        return np.inf
+    else:
+        return np.random.geometric(p)
 
 
 def infer_bernoulli_bayes(num_successes, num_trials, beta_prior=(1, 1)):
