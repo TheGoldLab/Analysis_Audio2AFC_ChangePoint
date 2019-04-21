@@ -4,6 +4,7 @@ Main reference: https://docs.python.org/3/library/unittest.html#unittest.TestCas
 """
 import unittest
 import types
+import numpy as np
 try:
     import mmcomplexity as mmx
 except ModuleNotFoundError:  # this is for sphinx
@@ -30,6 +31,17 @@ class TestModuleFunctions(unittest.TestCase):
         mmx.SIDES.add('up')
         self.assertRaises(RuntimeError, mmx.switch_side, 'left')
         mmx.SIDES.remove('up')
+
+    def test_flag_change_points(self):
+        self.assertIsInstance(mmx.flag_change_points(np.array([0, 1])), types.GeneratorType)
+        self.assertEqual(list(mmx.flag_change_points(np.array([1, 1]))), [False, False])
+        self.assertEqual(list(mmx.flag_change_points([1, 2, 3])), [False, True, True])
+        self.assertEqual(list(mmx.flag_change_points(['left', 'left', 'right'])), [False, False, True])
+
+        self.assertRaises(ValueError, list, mmx.flag_change_points([]))
+        self.assertRaises(ValueError, list, mmx.flag_change_points(np.array([[2, 3], [0, 1]])))
+        self.assertRaises(ValueError, list, mmx.flag_change_points(np.array([[2, 3], [2, 3]])))
+        self.assertRaises(ValueError, list, mmx.flag_change_points([3, [3, 5]]))
 
 
 class TestStimulusBlock(unittest.TestCase):

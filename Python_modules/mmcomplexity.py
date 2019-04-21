@@ -9,6 +9,40 @@ SIDES = {'left', 'right'}
 """set of allowed sides"""
 
 
+def flag_change_points(seq):
+    """
+
+    Args:
+        seq (list or ndarray): array-like object. Must be iterable and each element in iteration must support '=='
+
+    Raises:
+        ValueError: if seq is empty
+
+    Returns:
+        generator: generates boolean values, True whenever a term in seq differs from its predecessor
+
+    """
+    def check_1d(i):
+        if isinstance(i, np.ndarray) and i.size != 1:
+            raise ValueError('rows of ndarray have more than 1 element')
+        elif isinstance(i, list) and len(i) > 1:
+            raise ValueError('an element from array has more than 1 element')
+
+    new_seq = list(seq)
+    if new_seq:  # checks that seq was not empty
+        last_item = new_seq[0]
+        check_1d(last_item)
+
+        yield False  # first time step is never a change-point
+
+        for next_item in new_seq[1:]:
+            check_1d(next_item)
+            yield next_item != last_item
+            last_item = next_item
+    else:
+        raise ValueError('provided iterable is empty')
+
+
 def check_valid_side(side):
     """
     Check that side is in the allowed set of sides
