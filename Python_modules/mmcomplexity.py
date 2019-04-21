@@ -11,12 +11,14 @@ SIDES = {'left', 'right'}
 
 def flag_change_points(seq):
     """
+    iterate through seq and flag change points with False boolean.
 
     Args:
         seq (list or ndarray): array-like object. Must be iterable and each element in iteration must support '=='
+            list and ndarray types are not enforced
 
     Raises:
-        ValueError: if seq is empty
+        ValueError: if seq is empty, or if one of its elements is not 1-D
 
     Returns:
         generator: generates boolean values, True whenever a term in seq differs from its predecessor
@@ -25,8 +27,8 @@ def flag_change_points(seq):
     def check_1d(i):
         if isinstance(i, np.ndarray) and i.size != 1:
             raise ValueError('rows of ndarray have more than 1 element')
-        elif isinstance(i, list) and len(i) > 1:
-            raise ValueError('an element from array has more than 1 element')
+        elif isinstance(i, list) and len(i) != 1:
+            raise ValueError('an element from array has more or less than 1 element')
 
     new_seq = list(seq)
     if new_seq:  # checks that seq was not empty

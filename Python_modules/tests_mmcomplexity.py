@@ -42,6 +42,7 @@ class TestModuleFunctions(unittest.TestCase):
         self.assertRaises(ValueError, list, mmx.flag_change_points(np.array([[2, 3], [0, 1]])))
         self.assertRaises(ValueError, list, mmx.flag_change_points(np.array([[2, 3], [2, 3]])))
         self.assertRaises(ValueError, list, mmx.flag_change_points([3, [3, 5]]))
+        self.assertRaises(ValueError, list, mmx.flag_change_points([3, []]))
 
 
 class TestStimulusBlock(unittest.TestCase):
