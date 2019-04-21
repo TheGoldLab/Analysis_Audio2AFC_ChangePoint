@@ -3,7 +3,7 @@ Python module to analyze mental model comlexity in our Auditory change-point tas
 """
 import numpy as np
 import pandas as pd
-from scipy.stats import bernoulli
+from scipy.stats import bernoulli, beta
 
 SIDES = {'left', 'right'}
 """set of allowed sides"""
@@ -121,6 +121,37 @@ def get_next_change_point(p):
         int: time step in the future for occurrence of first success (starts counting at 1)
     """
     return np.random.geometric(p)
+
+
+def infer_bernoulli_bayes(num_successes, num_trials, beta_prior=(1, 1)):
+    """
+    Given ``num_trials`` independent observations from a Bernoulli random variable with ``num_successes`` successes,
+    returns the posterior distribution over the Bernoulli parameter in the form of a Beta distribution. May
+    take hyperparameters of a Beta distribution for the prior.
+
+    To compute the posterior, the sufficient statistics are updated.
+
+    Args:
+        num_successes (int): number of successes
+        num_trials (int): number of observations
+        beta_prior (tuple): corresponds to the usual parameters of a Beta distribution, a and b (or alpha, beta)
+            defaults to (1,1), which is a flat prior
+    Raises:
+        ValueError: if num_trials < num_successes or a hyperparameter is negative or num_trials < 0
+
+    Returns:
+        scipy.stats.beta: frozen distribution, see
+            `doc <https://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.stats.beta.html>`_.
+
+    """
+    if num_trials < 0:
+        raise ValueError('negative number of trials')
+    if num_trials < num_successes:
+        raise ValueError('fewer trials than sucesses')
+    if beta_prior[0] < 0 or beta_prior[1] < 0:
+        raise ValueError('hyperprior cannot have negative parameters')
+
+    return beta(beta_prior[0] + num_successes, beta_prior[1] + num_trials - num_successes)
 
 
 class StimulusBlock:

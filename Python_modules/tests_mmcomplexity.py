@@ -44,6 +44,19 @@ class TestModuleFunctions(unittest.TestCase):
         self.assertRaises(ValueError, list, mmx.flag_change_points([3, [3, 5]]))
         self.assertRaises(ValueError, list, mmx.flag_change_points([3, []]))
 
+    def test_infer_bernoulli_bayes(self):
+        self.assertRaises(ValueError, mmx.infer_bernoulli_bayes, 1, 0)
+        self.assertRaises(ValueError, mmx.infer_bernoulli_bayes, 1, -1)
+        self.assertRaises(ValueError, mmx.infer_bernoulli_bayes, 1, 1, (-1, 1))
+
+        # should return prior if no observation is made; we check mean and var
+        zero_obs = mmx.infer_bernoulli_bayes(0, 0)
+        self.assertEqual(zero_obs.stats(moments='mv'), (1/2, 1/12))
+
+        # if 1 success in 1 trial, should return Beta(2, 1); we check mean and var
+        one_obs = mmx.infer_bernoulli_bayes(1, 1)
+        self.assertEqual(one_obs.stats(moments='mv'), (2 / 3, 1 / 18))
+
 
 class TestStimulusBlock(unittest.TestCase):
     def setUp(self):
