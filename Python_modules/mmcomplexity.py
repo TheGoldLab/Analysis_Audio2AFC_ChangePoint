@@ -25,6 +25,17 @@ def flag_change_points(seq):
 
     """
     def check_1d(i):
+        """
+        This function raises exceptions when i is either a list or an ndarray with a different number of elements than 1
+
+        Args:
+            i: anything
+        Raises:
+            ValueError: if i is either a list or an ndarray with a different number of elements than 1
+        Returns:
+            None
+
+        """
         if isinstance(i, np.ndarray) and i.size != 1:
             raise ValueError('rows of ndarray have more than 1 element')
         elif isinstance(i, list) and len(i) != 1:
@@ -376,8 +387,11 @@ class Audio2AFCSimulation:
 
         self.data = pd.DataFrame({
             'source': sources,
+            'source_switch': list(flag_change_points(sources)),
             'sound': sounds,
+            'sound_switch': list(flag_change_points(sounds)),
             'hazard': hazards,
+            'hazard_switch': list(flag_change_points(hazards)),
             })
 
     def generate_stimulus_blocks(self):
