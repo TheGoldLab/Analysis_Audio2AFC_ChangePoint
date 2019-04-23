@@ -88,7 +88,7 @@ class TestStimulusBlock(unittest.TestCase):
         self.assertIsInstance(self.stim.sound_sequence, list)
 
 
-class TestIdealObserverModel(unittest.TestCase):
+class TestBinaryDecisionMaker(unittest.TestCase):
     def setUp(self):
         self.n = 10
         self.s = mmx.StimulusBlock(self.n, .3)
@@ -105,16 +105,69 @@ class TestIdealObserverModel(unittest.TestCase):
         num_obs = len(self.o.observations)
         self.assertEqual(num_obs, self.n)
 
+    def test_default_sources_prior(self):
+        self.assertEqual(self.o.sources_prior, {'left': 0.5, 'right': 0.5})
+
+
+class TestKnownHazard(unittest.TestCase):
+    def setUp(self):
+        self.num_trials = 10
+        self.stim = mmx.StimulusBlock(self.num_trials, .3)
+        self.observer = mmx.KnownHazard(self.stim)
+        self.observer.observe()
+
+    def tearDown(self):
+        del self.stim
+        del self.observer
+        del self.num_trials
+
+    def test_default_sources_prior(self):
+        self.assertEqual(self.observer.sources_prior, {'left': 0.5, 'right': 0.5})
+
+    def test_num_observations(self):
+        num_obs = len(self.observer.observations)
+        self.assertEqual(num_obs, self.num_trials)
+
+        # test observations is None on brand new instance
+        new_observer = mmx.KnownHazard(self.stim)
+        self.assertIsNone(new_observer.observations)
+
     def test_decision_generator(self):
-        self.o.observe()
-        dec = self.o.process()
+        dec = self.observer.process()
         self.assertIsInstance(dec, types.GeneratorType)
-        self.assertEqual(len(list(dec)), self.n)
-        dec2 = self.o.process()
+        self.assertEqual(len(list(dec)), self.num_trials)
+
+        dec2 = self.observer.process()
         # check new generator is not exhausted
         first_item = next(dec2, 'exhausted')
         self.assertNotEqual(first_item, 'exhausted')
         self.assertIsInstance(first_item, tuple)
+
+    def test_delta_sources_prior(self):
+        # if delta prior on a source, all decisions should equal this source
+        # delta prior on left source
+        self.observer.sources_prior = {'left': 1, 'right': 0}
+        p = self.observer.process()
+        for _ in range(self.num_trials):
+            self.assertEqual(next(p)[1], 'left')
+        last_item = next(p, 'exhausted')
+        self.assertEqual(last_item, 'exhausted')
+
+        # delta prior on right source
+        self.observer.sources_prior = {'left': 0, 'right': 1}
+        p = self.observer.process()
+        for _ in range(self.num_trials):
+            self.assertEqual(next(p)[1], 'right')
+        last_item = next(p, 'exhausted')
+        self.assertEqual(last_item, 'exhausted')
+
+    def test_point_5_hazard(self):
+        # if hazard rate is 0.5, observer should always answer like the last sound
+        p = self.observer.process(hazard=0.5)
+        for o in range(self.num_trials):
+            _, decision = next(p)
+            last_sound = self.observer.observations[o]
+            self.assertEqual(decision, last_sound)
 
 
 class TestSimulation(unittest.TestCase):

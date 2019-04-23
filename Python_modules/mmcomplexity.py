@@ -260,16 +260,20 @@ class BinaryDecisionMaker:
     if not likelihoods_known:
         raise NotImplementedError
 
-    sources_prior = {'left': .5, 'right': .5}
-    """prior expectations about most likely side of a source"""
-
-    def __init__(self, stimulus_object):
+    def __init__(self, stimulus_object, sources_prior=(.5, .5)):
         """
         Args:
             stimulus_object (StimulusBlock): a stimulus with fixed hazard rate
+            sources_prior (tuple): prior probabilities as a 2-tuple, (left, right)
         """
         self.stimulus_object = stimulus_object
         self.observations = None  # will be set by the self.observe method
+
+        if np.sum(sources_prior) != 1:
+            raise ValueError("entries of sources_prior should sum to 1")
+        if any(map(lambda x: x<0, sources_prior)):
+            raise ValueError("at least one entry of sources_prior is negative")
+        self.sources_prior = {'left': sources_prior[0], 'right': sources_prior[1]}
 
     def observe(self, list_of_sounds=None):
         """
@@ -306,6 +310,31 @@ class BinaryDecisionMaker:
 
         return None
 
+    def process(self):
+        """must be implemented in subclasses"""
+        pass
+
+    def _decide(self, decision_variable):
+        """
+        Makes a decision on a single trial, based on the decision variable
+
+        Args:
+            decision_variable: for now, log posterior odds
+
+        Returns:
+            str: an element from SIDES
+
+        """
+        s = np.sign(decision_variable)
+        if s == -1:
+            return 'left'
+        elif s == 1:
+            return 'right'
+        elif s == 0:
+            return 1 if bernoulli.rvs(self.bias) else 0
+
+
+class KnownHazard(BinaryDecisionMaker):
     def process(self, observations=None, hazard=None):
         """
         This is where the bulk of the decision process occurs. Observations are converted into a decision variable.
@@ -352,9 +381,17 @@ class BinaryDecisionMaker:
             return np.log(numerator / denominator)
 
         def recursive_update():
-            prior_belief = np.log(self.sources_prior['right'] / self.sources_prior['left'])
-            num_observations = len(observations)
             decision_number = 0
+            num_observations = len(observations)
+
+            if all(self.sources_prior.values()):  # checks that no side has 0 prior probability
+                prior_belief = np.log(self.sources_prior['right'] / self.sources_prior['left'])
+            else:  # this is the trivial case in which the delta prior cannot be changed
+                prior_belief = np.inf if self.sources_prior['right'] == 1 else -np.inf
+                while decision_number < num_observations:
+                    yield prior_belief, self._decide(prior_belief)
+                    decision_number += 1
+
             while decision_number < num_observations:
                 if observations[decision_number] == 'right':
                     jump = jump_magnitude
@@ -371,24 +408,37 @@ class BinaryDecisionMaker:
 
         return recursive_update()
 
-    def _decide(self, decision_variable):
+
+class UnknownHazard(BinaryDecisionMaker):
+    def process(self, observations=None, hazard=None):
         """
-        Makes a decision on a single trial, based on the decision variable
+        This is where the bulk of the decision process occurs. Observations are converted into a decision variable.
+
+        For now, only the log posterior odds of the sources is computed, and hazard rate is assumed fixed.
 
         Args:
-            decision_variable: for now, log posterior odds
+            observations (list): sequence of perceived sound locations. If None, self.observations is used
+            hazard: hazard rate, if None, the one from the stimulus_object attribute is fetched
 
         Returns:
-            str: an element from SIDES
+            generator object that yields (joint posterior, decisions)
+                joint posterior is a dict...
 
         """
-        s = np.sign(decision_variable)
-        if s == -1:
-            return 'left'
-        elif s == 1:
-            return 'right'
-        elif s == 0:
-            return 1 if bernoulli.rvs(self.bias) else 0
+        if observations is None:
+            observations = self.observations
+        else:
+            check_valid_sequence_of_sides(observations)  # exception raised if a stimulus is invalid
+
+        if hazard is None:
+            hazard = self.stimulus_object.hazard
+        assert (isinstance(hazard, float) or isinstance(hazard, int)) and (0 <= hazard <= 1)
+
+        prob_same_side = self.stimulus_object.likelihood_same_side
+
+        # jump in accrued evidence towards 'right' choice if sound on right
+        jump_magnitude = np.log(prob_same_side / (1 - prob_same_side))
+        raise NotImplementedError
 
 
 class Audio2AFCSimulation:
