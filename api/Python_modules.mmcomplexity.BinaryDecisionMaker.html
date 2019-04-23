@@ -18,7 +18,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="StimulusBlock" href="Python_modules.mmcomplexity.StimulusBlock.html" />
+    <link rel="next" title="KnownHazard" href="Python_modules.mmcomplexity.KnownHazard.html" />
     <link rel="prev" title="Audio2AFCSimulation" href="Python_modules.mmcomplexity.Audio2AFCSimulation.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -31,7 +31,7 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="Python_modules.mmcomplexity.StimulusBlock.html" title="StimulusBlock"
+          <a href="Python_modules.mmcomplexity.KnownHazard.html" title="KnownHazard"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="Python_modules.mmcomplexity.Audio2AFCSimulation.html" title="Audio2AFCSimulation"
@@ -50,7 +50,7 @@
 <h1>BinaryDecisionMaker<a class="headerlink" href="#binarydecisionmaker" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="Python_modules.mmcomplexity.BinaryDecisionMaker">
-<em class="property">class </em><code class="descclassname">Python_modules.mmcomplexity.</code><code class="descname">BinaryDecisionMaker</code><span class="sig-paren">(</span><em>stimulus_object</em><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.mmcomplexity.BinaryDecisionMaker" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">Python_modules.mmcomplexity.</code><code class="descname">BinaryDecisionMaker</code><span class="sig-paren">(</span><em>stimulus_object</em>, <em>sources_prior=(0.5</em>, <em>0.5)</em><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.mmcomplexity.BinaryDecisionMaker" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Simulate an observer performing our Auditory change-point 2AFC task</p>
 <p class="rubric">Attributes Summary</p>
@@ -69,9 +69,6 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#Python_modules.mmcomplexity.BinaryDecisionMaker.mislocalization_noise" title="Python_modules.mmcomplexity.BinaryDecisionMaker.mislocalization_noise"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mislocalization_noise</span></code></a></p></td>
 <td><p>probability with which the observer hears a tone on the wrong side</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#Python_modules.mmcomplexity.BinaryDecisionMaker.sources_prior" title="Python_modules.mmcomplexity.BinaryDecisionMaker.sources_prior"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sources_prior</span></code></a></p></td>
-<td><p>prior expectations about most likely side of a source</p></td>
-</tr>
 </tbody>
 </table>
 <p class="rubric">Methods Summary</p>
@@ -84,8 +81,8 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#Python_modules.mmcomplexity.BinaryDecisionMaker.observe" title="Python_modules.mmcomplexity.BinaryDecisionMaker.observe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">observe</span></code></a>([list_of_sounds])</p></td>
 <td><p>Generate subjective observations of a given stimulus</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#Python_modules.mmcomplexity.BinaryDecisionMaker.process" title="Python_modules.mmcomplexity.BinaryDecisionMaker.process"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process</span></code></a>([observations, hazard])</p></td>
-<td><p>This is where the bulk of the decision process occurs.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#Python_modules.mmcomplexity.BinaryDecisionMaker.process" title="Python_modules.mmcomplexity.BinaryDecisionMaker.process"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process</span></code></a>()</p></td>
+<td><p>must be implemented in subclasses</p></td>
 </tr>
 </tbody>
 </table>
@@ -108,12 +105,6 @@
 <dd><p>probability with which the observer hears a tone on the wrong side</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="Python_modules.mmcomplexity.BinaryDecisionMaker.sources_prior">
-<code class="descname">sources_prior</code><em class="property"> = {'left': 0.5, 'right': 0.5}</em><a class="headerlink" href="#Python_modules.mmcomplexity.BinaryDecisionMaker.sources_prior" title="Permalink to this definition">¶</a></dt>
-<dd><p>prior expectations about most likely side of a source</p>
-</dd></dl>
-
 <p class="rubric">Methods Documentation</p>
 <dl class="method">
 <dt id="Python_modules.mmcomplexity.BinaryDecisionMaker.observe">
@@ -130,16 +121,8 @@
 
 <dl class="method">
 <dt id="Python_modules.mmcomplexity.BinaryDecisionMaker.process">
-<code class="descname">process</code><span class="sig-paren">(</span><em>observations=None</em>, <em>hazard=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.mmcomplexity.BinaryDecisionMaker.process" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is where the bulk of the decision process occurs. Observations are converted into a decision variable.</p>
-<p>For now, only the log posterior odds of the sources is computed, and hazard rate is assumed fixed.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>observations (list): sequence of perceived sound locations. If None, self.observations is used
-hazard: hazard rate, if None, the one from the stimulus_object attribute is fetched</p>
-</dd>
-<dt>Returns:</dt><dd><p>generator object that yields (log posterior odds, decisions)</p>
-</dd>
-</dl>
+<code class="descname">process</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.mmcomplexity.BinaryDecisionMaker.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>must be implemented in subclasses</p>
 </dd></dl>
 
 </dd></dl>
@@ -156,8 +139,8 @@ hazard: hazard rate, if None, the one from the stimulus_object attribute is fetc
   <p class="topless"><a href="Python_modules.mmcomplexity.Audio2AFCSimulation.html"
                         title="previous chapter">Audio2AFCSimulation</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="Python_modules.mmcomplexity.StimulusBlock.html"
-                        title="next chapter">StimulusBlock</a></p>
+  <p class="topless"><a href="Python_modules.mmcomplexity.KnownHazard.html"
+                        title="next chapter">KnownHazard</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -189,7 +172,7 @@ hazard: hazard rate, if None, the one from the stimulus_object attribute is fetc
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="Python_modules.mmcomplexity.StimulusBlock.html" title="StimulusBlock"
+          <a href="Python_modules.mmcomplexity.KnownHazard.html" title="KnownHazard"
              >next</a> |</li>
         <li class="right" >
           <a href="Python_modules.mmcomplexity.Audio2AFCSimulation.html" title="Audio2AFCSimulation"

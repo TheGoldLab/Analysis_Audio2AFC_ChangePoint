@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>check_valid_side &#8212; mmcomplexity 0.0.1 documentation</title>
+    <title>flag_change_points &#8212; mmcomplexity 0.0.1 documentation</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -18,8 +18,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="flag_change_points" href="Python_modules.mmcomplexity.flag_change_points.html" />
-    <link rel="prev" title="check_valid_sequence_of_sides" href="Python_modules.mmcomplexity.check_valid_sequence_of_sides.html" /> 
+    <link rel="next" title="get_next_change_point" href="Python_modules.mmcomplexity.get_next_change_point.html" />
+    <link rel="prev" title="check_valid_side" href="Python_modules.mmcomplexity.check_valid_side.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -31,10 +31,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="Python_modules.mmcomplexity.flag_change_points.html" title="flag_change_points"
+          <a href="Python_modules.mmcomplexity.get_next_change_point.html" title="get_next_change_point"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="Python_modules.mmcomplexity.check_valid_sequence_of_sides.html" title="check_valid_sequence_of_sides"
+          <a href="Python_modules.mmcomplexity.check_valid_side.html" title="check_valid_side"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">mmcomplexity 0.0.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../module_documentation.html" accesskey="U">Python_modules.mmcomplexity Module</a> &#187;</li> 
@@ -46,19 +46,21 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="check-valid-side">
-<h1>check_valid_side<a class="headerlink" href="#check-valid-side" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="flag-change-points">
+<h1>flag_change_points<a class="headerlink" href="#flag-change-points" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
-<dt id="Python_modules.mmcomplexity.check_valid_side">
-<code class="descclassname">Python_modules.mmcomplexity.</code><code class="descname">check_valid_side</code><span class="sig-paren">(</span><em>side</em><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.mmcomplexity.check_valid_side" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check that side is in the allowed set of sides</p>
+<dt id="Python_modules.mmcomplexity.flag_change_points">
+<code class="descclassname">Python_modules.mmcomplexity.</code><code class="descname">flag_change_points</code><span class="sig-paren">(</span><em>seq</em><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.mmcomplexity.flag_change_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>iterate through seq and flag change points with False boolean.</p>
 <dl class="simple">
-<dt>Args:</dt><dd><p>side (str): usually either ‘left’ or ‘right’</p>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>seq (list or ndarray): array-like object. Must be iterable and each element in iteration must support ‘==’</dt><dd><p>list and ndarray types are not enforced</p>
 </dd>
-<dt>Raises:</dt><dd><p>ValueError: if side is hashable but invalid
-TypeError: if side is not hashable</p>
+</dl>
 </dd>
-<dt>Returns:</dt><dd><p>None: if side is valid.</p>
+<dt>Raises:</dt><dd><p>ValueError: if seq is empty, or if one of its elements is not 1-D</p>
+</dd>
+<dt>Returns:</dt><dd><p>generator: generates boolean values, True whenever a term in seq differs from its predecessor</p>
 </dd>
 </dl>
 </dd></dl>
@@ -72,15 +74,15 @@ TypeError: if side is not hashable</p>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="Python_modules.mmcomplexity.check_valid_sequence_of_sides.html"
-                        title="previous chapter">check_valid_sequence_of_sides</a></p>
+  <p class="topless"><a href="Python_modules.mmcomplexity.check_valid_side.html"
+                        title="previous chapter">check_valid_side</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="Python_modules.mmcomplexity.flag_change_points.html"
-                        title="next chapter">flag_change_points</a></p>
+  <p class="topless"><a href="Python_modules.mmcomplexity.get_next_change_point.html"
+                        title="next chapter">get_next_change_point</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/api/Python_modules.mmcomplexity.check_valid_side.rst.txt"
+      <li><a href="../_sources/api/Python_modules.mmcomplexity.flag_change_points.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -108,10 +110,10 @@ TypeError: if side is not hashable</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="Python_modules.mmcomplexity.flag_change_points.html" title="flag_change_points"
+          <a href="Python_modules.mmcomplexity.get_next_change_point.html" title="get_next_change_point"
              >next</a> |</li>
         <li class="right" >
-          <a href="Python_modules.mmcomplexity.check_valid_sequence_of_sides.html" title="check_valid_sequence_of_sides"
+          <a href="Python_modules.mmcomplexity.check_valid_side.html" title="check_valid_side"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">mmcomplexity 0.0.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../module_documentation.html" >Python_modules.mmcomplexity Module</a> &#187;</li> 

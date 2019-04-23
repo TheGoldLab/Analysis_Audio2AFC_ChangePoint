@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>TestModuleFunctions &#8212; mmcomplexity 0.0.1 documentation</title>
+    <title>KnownHazard &#8212; mmcomplexity 0.0.1 documentation</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -18,8 +18,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="TestSimulation" href="Python_modules.tests_mmcomplexity.TestSimulation.html" />
-    <link rel="prev" title="TestKnownHazard" href="Python_modules.tests_mmcomplexity.TestKnownHazard.html" /> 
+    <link rel="next" title="StimulusBlock" href="Python_modules.mmcomplexity.StimulusBlock.html" />
+    <link rel="prev" title="BinaryDecisionMaker" href="Python_modules.mmcomplexity.BinaryDecisionMaker.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -31,10 +31,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="Python_modules.tests_mmcomplexity.TestSimulation.html" title="TestSimulation"
+          <a href="Python_modules.mmcomplexity.StimulusBlock.html" title="StimulusBlock"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="Python_modules.tests_mmcomplexity.TestKnownHazard.html" title="TestKnownHazard"
+          <a href="Python_modules.mmcomplexity.BinaryDecisionMaker.html" title="BinaryDecisionMaker"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">mmcomplexity 0.0.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../module_documentation.html" accesskey="U">Python_modules.mmcomplexity Module</a> &#187;</li> 
@@ -46,12 +46,12 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="testmodulefunctions">
-<h1>TestModuleFunctions<a class="headerlink" href="#testmodulefunctions" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="knownhazard">
+<h1>KnownHazard<a class="headerlink" href="#knownhazard" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="Python_modules.tests_mmcomplexity.TestModuleFunctions">
-<em class="property">class </em><code class="descclassname">Python_modules.tests_mmcomplexity.</code><code class="descname">TestModuleFunctions</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.tests_mmcomplexity.TestModuleFunctions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<dt id="Python_modules.mmcomplexity.KnownHazard">
+<em class="property">class </em><code class="descclassname">Python_modules.mmcomplexity.</code><code class="descname">KnownHazard</code><span class="sig-paren">(</span><em>stimulus_object</em>, <em>sources_prior=(0.5</em>, <em>0.5)</em><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.mmcomplexity.KnownHazard" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="Python_modules.mmcomplexity.BinaryDecisionMaker.html#Python_modules.mmcomplexity.BinaryDecisionMaker" title="Python_modules.mmcomplexity.BinaryDecisionMaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">Python_modules.mmcomplexity.BinaryDecisionMaker</span></code></a></p>
 <p class="rubric">Methods Summary</p>
 <table class="longtable docutils align-center">
 <colgroup>
@@ -59,32 +59,25 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#Python_modules.tests_mmcomplexity.TestModuleFunctions.test_allowed_sides" title="Python_modules.tests_mmcomplexity.TestModuleFunctions.test_allowed_sides"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_allowed_sides</span></code></a>()</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#Python_modules.tests_mmcomplexity.TestModuleFunctions.test_check_valid_side" title="Python_modules.tests_mmcomplexity.TestModuleFunctions.test_check_valid_side"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_check_valid_side</span></code></a>()</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#Python_modules.tests_mmcomplexity.TestModuleFunctions.test_switch_side" title="Python_modules.tests_mmcomplexity.TestModuleFunctions.test_switch_side"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_switch_side</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Python_modules.mmcomplexity.KnownHazard.process" title="Python_modules.mmcomplexity.KnownHazard.process"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process</span></code></a>([observations, hazard])</p></td>
+<td><p>This is where the bulk of the decision process occurs.</p></td>
 </tr>
 </tbody>
 </table>
 <p class="rubric">Methods Documentation</p>
 <dl class="method">
-<dt id="Python_modules.tests_mmcomplexity.TestModuleFunctions.test_allowed_sides">
-<code class="descname">test_allowed_sides</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.tests_mmcomplexity.TestModuleFunctions.test_allowed_sides" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="Python_modules.tests_mmcomplexity.TestModuleFunctions.test_check_valid_side">
-<code class="descname">test_check_valid_side</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.tests_mmcomplexity.TestModuleFunctions.test_check_valid_side" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="Python_modules.tests_mmcomplexity.TestModuleFunctions.test_switch_side">
-<code class="descname">test_switch_side</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.tests_mmcomplexity.TestModuleFunctions.test_switch_side" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="Python_modules.mmcomplexity.KnownHazard.process">
+<code class="descname">process</code><span class="sig-paren">(</span><em>observations=None</em>, <em>hazard=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.mmcomplexity.KnownHazard.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is where the bulk of the decision process occurs. Observations are converted into a decision variable.</p>
+<p>For now, only the log posterior odds of the sources is computed, and hazard rate is assumed fixed.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>observations (list): sequence of perceived sound locations. If None, self.observations is used
+hazard: hazard rate, if None, the one from the stimulus_object attribute is fetched</p>
+</dd>
+<dt>Returns:</dt><dd><p>generator object that yields (log posterior odds, decisions)</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -97,15 +90,15 @@
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="Python_modules.tests_mmcomplexity.TestKnownHazard.html"
-                        title="previous chapter">TestKnownHazard</a></p>
+  <p class="topless"><a href="Python_modules.mmcomplexity.BinaryDecisionMaker.html"
+                        title="previous chapter">BinaryDecisionMaker</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="Python_modules.tests_mmcomplexity.TestSimulation.html"
-                        title="next chapter">TestSimulation</a></p>
+  <p class="topless"><a href="Python_modules.mmcomplexity.StimulusBlock.html"
+                        title="next chapter">StimulusBlock</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/api/Python_modules.tests_mmcomplexity.TestModuleFunctions.rst.txt"
+      <li><a href="../_sources/api/Python_modules.mmcomplexity.KnownHazard.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -133,10 +126,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="Python_modules.tests_mmcomplexity.TestSimulation.html" title="TestSimulation"
+          <a href="Python_modules.mmcomplexity.StimulusBlock.html" title="StimulusBlock"
              >next</a> |</li>
         <li class="right" >
-          <a href="Python_modules.tests_mmcomplexity.TestKnownHazard.html" title="TestKnownHazard"
+          <a href="Python_modules.mmcomplexity.BinaryDecisionMaker.html" title="BinaryDecisionMaker"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">mmcomplexity 0.0.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../module_documentation.html" >Python_modules.mmcomplexity Module</a> &#187;</li> 

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>check_valid_side &#8212; mmcomplexity 0.0.1 documentation</title>
+    <title>infer_bernoulli_bayes &#8212; mmcomplexity 0.0.1 documentation</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -18,8 +18,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="flag_change_points" href="Python_modules.mmcomplexity.flag_change_points.html" />
-    <link rel="prev" title="check_valid_sequence_of_sides" href="Python_modules.mmcomplexity.check_valid_sequence_of_sides.html" /> 
+    <link rel="next" title="switch_side" href="Python_modules.mmcomplexity.switch_side.html" />
+    <link rel="prev" title="get_next_change_point" href="Python_modules.mmcomplexity.get_next_change_point.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -31,10 +31,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="Python_modules.mmcomplexity.flag_change_points.html" title="flag_change_points"
+          <a href="Python_modules.mmcomplexity.switch_side.html" title="switch_side"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="Python_modules.mmcomplexity.check_valid_sequence_of_sides.html" title="check_valid_sequence_of_sides"
+          <a href="Python_modules.mmcomplexity.get_next_change_point.html" title="get_next_change_point"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">mmcomplexity 0.0.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../module_documentation.html" accesskey="U">Python_modules.mmcomplexity Module</a> &#187;</li> 
@@ -46,19 +46,29 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="check-valid-side">
-<h1>check_valid_side<a class="headerlink" href="#check-valid-side" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="infer-bernoulli-bayes">
+<h1>infer_bernoulli_bayes<a class="headerlink" href="#infer-bernoulli-bayes" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
-<dt id="Python_modules.mmcomplexity.check_valid_side">
-<code class="descclassname">Python_modules.mmcomplexity.</code><code class="descname">check_valid_side</code><span class="sig-paren">(</span><em>side</em><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.mmcomplexity.check_valid_side" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check that side is in the allowed set of sides</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>side (str): usually either ‘left’ or ‘right’</p>
+<dt id="Python_modules.mmcomplexity.infer_bernoulli_bayes">
+<code class="descclassname">Python_modules.mmcomplexity.</code><code class="descname">infer_bernoulli_bayes</code><span class="sig-paren">(</span><em>num_successes</em>, <em>num_trials</em>, <em>beta_prior=(1</em>, <em>1)</em><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.mmcomplexity.infer_bernoulli_bayes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given <code class="docutils literal notranslate"><span class="pre">num_trials</span></code> independent observations from a Bernoulli random variable with <code class="docutils literal notranslate"><span class="pre">num_successes</span></code> successes,
+returns the posterior distribution over the Bernoulli parameter in the form of a Beta distribution. May
+take hyperparameters of a Beta distribution for the prior.</p>
+<p>To compute the posterior, the sufficient statistics are updated.</p>
+<dl>
+<dt>Args:</dt><dd><p>num_successes (int): number of successes
+num_trials (int): number of observations
+beta_prior (tuple): corresponds to the usual parameters of a Beta distribution, a and b (or alpha, beta)</p>
+<blockquote>
+<div><p>defaults to (1,1), which is a flat prior</p>
+</div></blockquote>
 </dd>
-<dt>Raises:</dt><dd><p>ValueError: if side is hashable but invalid
-TypeError: if side is not hashable</p>
+<dt>Raises:</dt><dd><p>ValueError: if num_trials &lt; num_successes or a hyperparameter is negative or num_trials &lt; 0</p>
 </dd>
-<dt>Returns:</dt><dd><p>None: if side is valid.</p>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>scipy.stats.beta: frozen distribution, see</dt><dd><p><a class="reference external" href="https://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.stats.beta.html">doc</a>.</p>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -72,15 +82,15 @@ TypeError: if side is not hashable</p>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="Python_modules.mmcomplexity.check_valid_sequence_of_sides.html"
-                        title="previous chapter">check_valid_sequence_of_sides</a></p>
+  <p class="topless"><a href="Python_modules.mmcomplexity.get_next_change_point.html"
+                        title="previous chapter">get_next_change_point</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="Python_modules.mmcomplexity.flag_change_points.html"
-                        title="next chapter">flag_change_points</a></p>
+  <p class="topless"><a href="Python_modules.mmcomplexity.switch_side.html"
+                        title="next chapter">switch_side</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/api/Python_modules.mmcomplexity.check_valid_side.rst.txt"
+      <li><a href="../_sources/api/Python_modules.mmcomplexity.infer_bernoulli_bayes.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -108,10 +118,10 @@ TypeError: if side is not hashable</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="Python_modules.mmcomplexity.flag_change_points.html" title="flag_change_points"
+          <a href="Python_modules.mmcomplexity.switch_side.html" title="switch_side"
              >next</a> |</li>
         <li class="right" >
-          <a href="Python_modules.mmcomplexity.check_valid_sequence_of_sides.html" title="check_valid_sequence_of_sides"
+          <a href="Python_modules.mmcomplexity.get_next_change_point.html" title="get_next_change_point"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">mmcomplexity 0.0.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../module_documentation.html" >Python_modules.mmcomplexity Module</a> &#187;</li> 
