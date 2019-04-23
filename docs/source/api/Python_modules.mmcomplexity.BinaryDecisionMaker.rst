@@ -13,7 +13,6 @@ BinaryDecisionMaker
       ~BinaryDecisionMaker.bias
       ~BinaryDecisionMaker.likelihoods_known
       ~BinaryDecisionMaker.mislocalization_noise
-      ~BinaryDecisionMaker.sources_prior
 
    .. rubric:: Methods Summary
 
