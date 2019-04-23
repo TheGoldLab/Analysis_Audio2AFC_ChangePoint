@@ -26,7 +26,6 @@ BinaryDecisionMaker
    .. autoattribute:: bias
    .. autoattribute:: likelihoods_known
    .. autoattribute:: mislocalization_noise
-   .. autoattribute:: sources_prior
 
    .. rubric:: Methods Documentation
 
