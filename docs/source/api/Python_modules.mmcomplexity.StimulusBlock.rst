@@ -1,23 +1,23 @@
-Stimulus
-========
+StimulusBlock
+=============
 
 .. currentmodule:: Python_modules.mmcomplexity
 
-.. autoclass:: Stimulus
+.. autoclass:: StimulusBlock
    :show-inheritance:
 
    .. rubric:: Attributes Summary
 
    .. autosummary::
 
-      ~Stimulus.likelihood_same_side
-      ~Stimulus.source_prior
+      ~StimulusBlock.likelihood_same_side
+      ~StimulusBlock.source_prior
 
    .. rubric:: Methods Summary
 
    .. autosummary::
 
-      ~Stimulus.generate_source_sequence
+      ~StimulusBlock.generate_source_sequence
 
    .. rubric:: Attributes Documentation
 
