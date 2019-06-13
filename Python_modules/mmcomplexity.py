@@ -1,9 +1,23 @@
 """
 Python module to analyze mental model comlexity in our Auditory change-point task
+
+To activate warnings in interactive Shell, type:
+
+  >>> import warnings
+  >>> import mmcomplexity as mmx
+  >>> warnings.filterwarnings("default", category=DeprecationWarning,
+                                   module=mmx.get("__name__"))
 """
 import numpy as np
 import pandas as pd
 from scipy.stats import bernoulli, beta
+import warnings
+import sys
+
+if not sys.warnoptions:
+    import os
+    warnings.simplefilter("default")  # Change the filter in this process
+    os.environ["PYTHONWARNINGS"] = "default"  # Also affect subprocesses
 
 SIDES = {'left', 'right'}
 """set of allowed sides"""
@@ -279,7 +293,7 @@ class BinaryDecisionMaker:
         """
         Generate subjective observations of a given stimulus
 
-        todo: not clear yet whether list_of_sounds should be automatically extracted from the stimulus_object attribute
+        todo: what to do if list_of_sounds is not None but distinct from self.stimulus_object.sound_sequence?
 
         Args:
             list_of_sounds (list): list of sound locations (str). If None, uses self.stimulus_object.sound_sequence
@@ -291,6 +305,7 @@ class BinaryDecisionMaker:
         if list_of_sounds is None:
             list_of_sounds = self.stimulus_object.sound_sequence
         else:
+            warnings.warn('a list_of_sounds argument which is not None has still undefined behavior')
             check_valid_sequence_of_sides(list_of_sounds)  # exception raised if a stimulus is invalid
 
         def apply_sensory_noise(side):
@@ -459,9 +474,12 @@ class Audio2AFCSimulation:
         self.meta_k = meta_k
         self.meta_prior_h = meta_prior_h
 
-        # todo: not sure yet how to handle blocks of stimuli and observer
-        # self.stimulus
+        # todo: not sure yet how to handle observer
         # self.observer
+
+        # what happens below, is that the self.data attribute is created. This is a pandas.DataFrame with three
+        # crucial columns: sources, sounds and hazard. The way the stimulus is generated is by concatenating blocks
+        # of trials with constant hazard rate.
 
         sources, sounds, hazards = [], [], []
 
@@ -483,8 +501,8 @@ class Audio2AFCSimulation:
         """
         generate consecutive blocks of stimulus in which hazard rate is constant
 
-        The hazard rate at the beginning of each block is sampled from self.meta_prior_h, excluding the hazard rate from
-        the previous block. For the first block, no hazard rate value is excluded.
+        The hazard rate at the beginning of each block is sampled from self.h_values with probability self.meta_prior_h,
+        excluding the hazard rate from the previous block. For the first block, no hazard rate value is excluded.
         The first source of each block is sampled by applying the new hazard rate to the last source from the previous
         block. For the very first block, the source is sampled from StimulusBlock.source_prior
 
