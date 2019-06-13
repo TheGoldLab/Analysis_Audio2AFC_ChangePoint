@@ -22,6 +22,9 @@ if not sys.warnoptions:
 SIDES = {'left', 'right'}
 """set of allowed sides"""
 
+MAX_LOG_ODDS = 100
+assert MAX_LOG_ODDS > 0
+
 
 def flag_change_points(seq):
     """
@@ -170,6 +173,24 @@ def infer_bernoulli_bayes(num_successes, num_trials, beta_prior=(1, 1)):
         raise ValueError('hyperprior cannot have negative parameters')
 
     return beta(beta_prior[0] + num_successes, beta_prior[1] + num_trials - num_successes)
+
+
+def check_reasonable_log_odds(l):
+    return -MAX_LOG_ODDS < l < MAX_LOG_ODDS
+
+
+def get_posterior_from_log_odds(log_odds):
+    assert np.isscalar(log_odds)
+    assert check_reasonable_log_odds(log_odds)
+    return 1 / (1 + np.exp(-log_odds))
+
+
+def posterior_to_log_odds(posterior):
+    raise NotImplementedError
+
+
+def check_valid_probability_distribution(dist_array):
+    raise NotImplementedError
 
 
 class StimulusBlock:
@@ -327,11 +348,11 @@ class BinaryDecisionMaker:
 
     def process(self):
         """must be implemented in subclasses"""
-        pass
+        raise NotImplementedError
 
     def _decide(self, decision_variable):
         """
-        Makes a decision on a single trial, based on the decision variable
+        Makes a decision on a single trial, based on the sign of the decision variable
 
         Args:
             decision_variable: for now, log posterior odds
@@ -346,11 +367,11 @@ class BinaryDecisionMaker:
         elif s == 1:
             return 'right'
         elif s == 0:
-            return 1 if bernoulli.rvs(self.bias) else 0
+            return 'right' if bernoulli.rvs(self.bias) else 'left'
 
 
 class KnownHazard(BinaryDecisionMaker):
-    def process(self, observations=None, hazard=None):
+    def process(self, observations=None, hazard=None, filter_step=0):
         """
         This is where the bulk of the decision process occurs. Observations are converted into a decision variable.
 
@@ -359,7 +380,7 @@ class KnownHazard(BinaryDecisionMaker):
         Args:
             observations (list): sequence of perceived sound locations. If None, self.observations is used
             hazard: hazard rate, if None, the one from the stimulus_object attribute is fetched
-
+            filter_step (int): point in time on which the inference happens. 0 corresponds to present, 1 to prediction
         Returns:
             generator object that yields (log posterior odds, decisions)
 
@@ -418,7 +439,21 @@ class KnownHazard(BinaryDecisionMaker):
 
                 log_posterior_odds += jump + discount_old_evidence(log_posterior_odds)
 
-                yield log_posterior_odds, self._decide(log_posterior_odds)
+                if filter_step == 0:
+                    decision = self._decide(log_posterior_odds)
+                elif filter_step == 1:
+                    # get posterior for present state
+                    posterior_present = get_posterior_from_log_odds(log_posterior_odds)
+
+                    # compute log posterior odds for next state
+                    log_prediction_odds = posterior_to_log_odds(posterior_present)
+
+                    # decide
+                    decision = self._decide(log_prediction_odds)
+                else:
+                    raise ValueError('only 0 and 1 are valid values for filter_step for now')
+
+                yield log_posterior_odds, decision
                 decision_number += 1
 
         return recursive_update()
@@ -438,7 +473,7 @@ class UnknownHazard(BinaryDecisionMaker):
         Returns:
             generator object that yields (joint posterior, decisions)
                 joint posterior is a dict...
-
+        todo: implement this method
         """
         if observations is None:
             observations = self.observations
