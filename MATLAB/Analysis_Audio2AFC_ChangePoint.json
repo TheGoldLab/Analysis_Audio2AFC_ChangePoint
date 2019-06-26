@@ -1,0 +1,12 @@
+[
+    {
+       	"name": "Analysis_Audio2AFC_ChangePoint",
+		"type": "git",
+		"url": "https://github.com/TheGoldLab/Analysis_Audio2AFC_ChangePoint.git",
+		"update": "never"
+    },
+	{
+		"name": "Lab_Matlab_Control",
+		"type": "include"
+	}
+]
