@@ -3,7 +3,7 @@
 % 
 clear all
 tbUseProject('Analysis_Audio2AFC_ChangePoint');
-subj_number = '1';               % should be a string
+subj_number = '2';               % should be a string
 task_str = 'rep';                   % a string, either 'rep' or 'pred'
 npilot = str2double(subj_number); % subject number as double
 % clear classes
@@ -29,12 +29,19 @@ timestamp.subj2rep = '2019_06_25_12_31';
 data_timestamp = timestamp.(['subj',subj_number,task_str]); 
 
 % location of .csv files to output
-csvPath = ['data/Pilot',subj_number,'/'];
+csvPath = ['~/Audio2AFC_CP/raw/', data_timestamp,'/'];
 fileNameWithoutExt = ['pilot', subj_number, task_str];
 
 %% FIRA.ecodes data
 [topNode, FIRA] = ...
     topsTreeNodeTopNode.loadRawData(studyTag,...
     data_timestamp);
-% T=array2table(FIRA.ecodes.data, 'VariableNames', FIRA.ecodes.name);
-% writetable(T,[csvPath,fileNameWithoutExt,'_FIRA.csv'],'WriteRowNames',true)
+
+for i=1:length(FIRA.ecodes.name)
+    if strcmp(FIRA.ecodes.name{i}, 'catch')
+        FIRA.ecodes.name{i} = 'isCatch';
+    end
+end
+
+T=array2table(FIRA.ecodes.data, 'VariableNames', FIRA.ecodes.name);
+writetable(T,[csvPath,fileNameWithoutExt,'_FIRA.csv'],'WriteRowNames',true)
