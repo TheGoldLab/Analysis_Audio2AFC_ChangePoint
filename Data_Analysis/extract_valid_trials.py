@@ -1,6 +1,7 @@
 """
 script to be run from terminal
   $ python extract_valid_trials <filename with absolute path>
+# todo: change the folder in which data gets written, so that it matches the raw/processed distinction
 """
 import sys
 import pandas as pd
@@ -45,5 +46,7 @@ if __name__ == '__main__':
     else:
         fname = sys.argv[1]
         valid_data = extract_valid(fname)
+
+        # todo: replace the 'raw' part of the path by 'processed' in ofname below
         ofname = fname[:-4] + '_valid_trials.csv'
         valid_data.to_csv(ofname, index=False)
