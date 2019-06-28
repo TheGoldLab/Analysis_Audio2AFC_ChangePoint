@@ -47,6 +47,7 @@ if __name__ == '__main__':
         fname = sys.argv[1]
         valid_data = extract_valid(fname)
 
-        # todo: replace the 'raw' part of the path by 'processed' in ofname below
         ofname = fname[:-4] + '_valid_trials.csv'
+        ofname.replace('raw', 'processed')
+        print('writing file to ', ofname)
         valid_data.to_csv(ofname, index=False)
