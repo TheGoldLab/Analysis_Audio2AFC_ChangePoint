@@ -27,6 +27,7 @@ block_strings = {0: 'rep', 1: 'pred'}
 pcorrect = {}
 num_valid_trials = {}
 
+
 def make_filename(subj_number, block_str):
     """
     builds the full path to the file that contains the valid trials for a given subject and block

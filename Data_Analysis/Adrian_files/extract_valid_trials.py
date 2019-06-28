@@ -48,6 +48,6 @@ if __name__ == '__main__':
         valid_data = extract_valid(fname)
 
         ofname = fname[:-4] + '_valid_trials.csv'
-        ofname.replace('raw', 'processed')
+        ofname = ofname.replace('raw', 'processed')
         print('writing file to ', ofname)
         valid_data.to_csv(ofname, index=False)
