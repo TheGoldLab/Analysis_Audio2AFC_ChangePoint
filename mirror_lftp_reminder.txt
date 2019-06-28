@@ -1,0 +1,7 @@
+$ lftp -u scienceprojects ftp.scienceprojects.altervista.org
+lftp scienceprojects@ftp.scienceprojects.altervista.org:~> set ssl:verify-certificate false
+lftp scienceprojects@ftp.scienceprojects.altervista.org:/> lcd /home/adrian/Git/GitHub/work/Analysis_Audio2AFC_ChangePoint/data_website/
+lcd ok, local cwd=/home/adrian/Git/GitHub/work/Analysis_Audio2AFC_ChangePoint/data_website
+lftp scienceprojects@ftp.scienceprojects.altervista.org:/> mirror -Rn
+lftp scienceprojects@ftp.scienceprojects.altervista.org:/> ls -alFGh
+lftp scienceprojects@ftp.scienceprojects.altervista.org:/> quit
