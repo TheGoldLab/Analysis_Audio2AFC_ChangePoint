@@ -1,41 +1,32 @@
-% this script is the standard pre-processing step to convert the data that
+function mat2csv(subj_number, task_str)
+% this function is the standard pre-processing step to convert the data that
 % we need for our analysis from .mat to .csv format.
-% 
-clear all
-tbUseProject('Analysis_Audio2AFC_ChangePoint');
-subj_number = '2';               % should be a string
-task_str = 'rep';                   % a string, either 'rep' or 'pred'
-npilot = str2double(subj_number); % subject number as double
-% clear classes
-% clear mex
-% clear
+% ARGS:
+% subj_number        should be a string
+% task_str           a string, either 'rep' or 'pred'
+% NOTES: 
+%    first col of data_mapping.csv expected to be timestamp
+%    tbUseProject('Analysis_Audio2AFC_ChangePoint') should be called before
 
 %% Folders and path variables
 
-studyTag = 'Audio2AFC_CP'; 
+studyTag = 'Audio2AFC_CP';
 
-% mapping of Pilot data to timestamps
-% ======  DO NOT ERASE!! ======
-% '2019_06_25_11_11' = subject 1 - prediction
-% '2019_06_25_11_40' = subject 1 - report
-% '2019_06_25_12_09' = subject 2 - prediction
-% '2019_06_25_12_31' = subject 2 - report
-% =============================
-timestamp.subj1pred = '2019_06_25_11_11';
-timestamp.subj1rep = '2019_06_25_11_40';
-timestamp.subj2pred = '2019_06_25_12_09';
-timestamp.subj2rep = '2019_06_25_12_31';
-
-data_timestamp = timestamp.(['subj',subj_number,task_str]); 
+% mapping from (subj_number, task_str) to timestamp is contained in
+% data_mapping.csv
+mapping_data = readtable('data_mapping.csv', 'Delimiter', ',', ...
+    'ReadVariableNames', true);
+data_timestamp = mapping_data{mapping_data.subject == subj_number & ...
+    strcmp(mapping_data.block, task_str), 1};
 
 % location of .csv files to output
-csvPath = ['~/Audio2AFC_CP/raw/', data_timestamp,'/'];
-fileNameWithoutExt = ['pilot', subj_number, task_str];
+csvPath = ['~/Audio2AFC_CP/raw/', data_timestamp{1},'/'];
+fileNameWithoutExt = ['pilot', num2str(subj_number), task_str];
 
 %% FIRA.ecodes data
 [topNode, FIRA] = ...
     topsTreeNodeTopNode.loadRawData(studyTag,...
-    data_timestamp);
+    data_timestamp{1});
 
 for i=1:length(FIRA.ecodes.name)
     if strcmp(FIRA.ecodes.name{i}, 'catch')
@@ -45,3 +36,4 @@ end
 
 T=array2table(FIRA.ecodes.data, 'VariableNames', FIRA.ecodes.name);
 writetable(T,[csvPath,fileNameWithoutExt,'_FIRA.csv'],'WriteRowNames',true)
+end
