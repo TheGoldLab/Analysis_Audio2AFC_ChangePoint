@@ -5,8 +5,7 @@ To activate warnings in interactive Shell, type:
 
   >>> import warnings
   >>> import mmcomplexity as mmx
-  >>> warnings.filterwarnings("default", category=DeprecationWarning,
-                                   module=mmx.get("__name__"))
+  >>> warnings.filterwarnings("default", category=DeprecationWarning, module=mmx.get("__name__"))
 """
 import numpy as np
 import pandas as pd
@@ -496,9 +495,9 @@ class Audio2AFCSimulation:
     Use this class to launch simulations of our models
     """
 
-    def __init__(self, tot_trials, h_values, meta_k, meta_prior_h):
+    def __init__(self, tot_trials, h_values, meta_k, meta_prior_h, catch_rate=0.05):
         self.tot_trials = tot_trials
-
+        self.catch_rate = catch_rate
         assert isinstance(self.tot_trials, int) and self.tot_trials > 0
 
         # the following line implicitly checks that h_values is not a flot nor an int
@@ -523,13 +522,16 @@ class Audio2AFCSimulation:
             sounds += block.sound_sequence
             hazards += [block.hazard] * block.num_trials
 
+        catch_trials = np.random.binomial(1, self.catch_rate, len(sounds))
+
         self.data = pd.DataFrame({
-            'source': sources,
+            'sourceLoc': sources,
             'source_switch': list(flag_change_points(sources)),
-            'sound': sounds,
+            'soundLoc': sounds,
             'sound_switch': list(flag_change_points(sounds)),
             'hazard': hazards,
             'hazard_switch': list(flag_change_points(hazards)),
+            'isCatch': list(catch_trials)
             })
 
     def generate_stimulus_blocks(self):
