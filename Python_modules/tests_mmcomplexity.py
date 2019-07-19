@@ -76,7 +76,7 @@ class TestStimulusBlock(unittest.TestCase):
 
     def test_scalar_hazard(self):
         """test that only scalar h with 0 <= h <= 1 are accepted"""
-        bad_h = [-1, 12, [.2,.3]]
+        bad_h = [-1, 12, [.2, .3]]
         good_h = [0, 1, 3/4]
         for h in bad_h:
             self.assertRaises(ValueError, mmx.StimulusBlock, 10, h)

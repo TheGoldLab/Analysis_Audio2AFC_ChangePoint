@@ -1,7 +1,30 @@
 """
-Python module to analyze mental model comlexity in our Auditory change-point task
+Python module to analyze mental model complexity in our Auditory change-point task
 
-To activate warnings in interactive Shell, type:
+To generate a block of trials with fixed hazard rate on the sources, use the StimulusBlock class.
+
+To build your own decision-making model, base your class on BinaryDecisionMaker.
+
+Pre-existing sequential-update decision-making models are provided in this module:
+    KnownHazard:
+    UnknownHazard
+To initialize the models, you must provide a stimulus block and call the observe method.
+  >>> stim = StimulusBlock(100, .2)  # stimulus block with hazard rate 0.2 and 100 trials
+  >>> dm = KnownHazard(stim)
+  >>> dm.observe()
+To run the decision making algorithm on a sequence of trials, we use generators:
+  >>> gen1 = dm.process(target='source', filter_step=1)  # predict the next source
+  >>> dec1 = list(gen1)  # list of decisions
+  >>> gen2 = dm.process(target='source', filter_step=0)  # infer the current source
+  >>> dec2 = list(gen2)  # list of decisions
+
+To produce a sequence of trials with hazards that vary according to their own meta-hazard rate,
+use the class Audio2AFCSimulation. Below, we generate 400 trials with hazards being either 0.1 or 0.9, a meta hazard
+rate of 0.01 and flat prior on the hazard values.
+  >>> sim = Audio2AFCSimulation(400, [0.1, 0.9], .01, [0.5,0.5])
+  >>> sim.data.head()  # trial info is contained in a pandas.DataFrame
+
+-- Technical note -- to activate warnings in interactive Shell, type:
 
   >>> import warnings
   >>> import mmcomplexity as mmx
@@ -209,7 +232,7 @@ class StimulusBlock:
             else:
                 raise ValueError(f"hazard rate should be between 0 and 1")
         else:
-            raise ValueError(f"Right now, only scalara float or int hazard rate between 0 and 1 are accepted")
+            raise ValueError(f"Right now, only scalar float or int hazard rate between 0 and 1 are accepted")
 
         if sources is None:
             self.source_sequence = self.generate_source_sequence(first_source)
@@ -245,7 +268,7 @@ class StimulusBlock:
 
     def generate_source_sequence(self, init=None):
         """
-        Generate a sequence of sources
+        Generates a sequence of sources
 
         todo: might be computationally inefficient
 
@@ -281,18 +304,18 @@ class StimulusBlock:
 
 
 class BinaryDecisionMaker:
-    """Simulate an observer performing our Auditory change-point 2AFC task"""
+    """
+    Base class to simulate an observer performing our Auditory change-point 2AFC task.
+    Note that the bulk of the decision process algorithm is intentionally not implemented in this class.
+    Thus, classes inheriting from it must re-implement the process() method.
+    This model uses the true probability that the sound occurs on same side as the source.
+    """
 
     mislocalization_noise = 0
     """probability with which the observer hears a tone on the wrong side"""
 
     bias = 0.5
     """probability with which observer picks 'right' when guessing. Unbiased corresponds to 0.5"""
-
-    likelihoods_known = True
-    """if true, model uses true probability that the sound occurs on same side as source"""
-    if not likelihoods_known:
-        raise NotImplementedError
 
     def __init__(self, stimulus_object, sources_prior=(.5, .5)):
         """
@@ -370,7 +393,8 @@ class BinaryDecisionMaker:
 
 
 class KnownHazard(BinaryDecisionMaker):
-    def process(self, observations=None, hazard=None, filter_step=0):
+    """Binary decision maker which is an ideal observer who knows the true hazard rate value and assumes it fixed."""
+    def process(self, observations=None, hazard=None, filter_step=0, target='source'):
         """
         This is where the bulk of the decision process occurs. Observations are converted into a decision variable.
 
@@ -380,10 +404,13 @@ class KnownHazard(BinaryDecisionMaker):
             observations (list): sequence of perceived sound locations. If None, self.observations is used
             hazard: hazard rate, if None, the one from the stimulus_object attribute is fetched
             filter_step (int): point in time on which the inference happens. 0 corresponds to present, 1 to prediction
+            target (str): must be either 'source' or 'sound'
         Returns:
             generator object that yields (log posterior odds, decisions)
 
         """
+        if target != 'source':
+            raise NotImplementedError
         if observations is None:
             observations = self.observations
         else:
