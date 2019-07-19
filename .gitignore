@@ -104,3 +104,12 @@ venv.bak/
 .mypy_cache/
 .idea/*
 Data_Analysis/.idea/*
+
+Simulations/Block001/*
+Simulations/Block002/*
+Simulations/Block003/*
+Simulations/Block004/*
+Simulations/Block005/*
+Simulations/Block006/*
+Simulations/Block007/*
+Simulations/Block008/*

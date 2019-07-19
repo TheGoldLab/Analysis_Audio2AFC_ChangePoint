@@ -1,7 +1,6 @@
 """
 script to be run from terminal
   $ python extract_valid_trials <filename with absolute path>
-# todo: change the folder in which data gets written, so that it matches the raw/processed distinction
 """
 import sys
 import pandas as pd
