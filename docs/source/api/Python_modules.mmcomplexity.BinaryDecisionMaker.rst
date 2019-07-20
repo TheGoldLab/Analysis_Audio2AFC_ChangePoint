@@ -11,7 +11,6 @@ BinaryDecisionMaker
    .. autosummary::
 
       ~BinaryDecisionMaker.bias
-      ~BinaryDecisionMaker.likelihoods_known
       ~BinaryDecisionMaker.mislocalization_noise
 
    .. rubric:: Methods Summary

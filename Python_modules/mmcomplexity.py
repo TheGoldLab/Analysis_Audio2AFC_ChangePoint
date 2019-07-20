@@ -17,7 +17,8 @@ To run the decision making algorithm on a sequence of trials, we use generators:
   >>> dec1 = list(gen1)  # list of tuples (log-posterior odds, decision)
   >>> gen2 = dm.process(target='source', filter_step=0)  # infer the current source
   >>> dec2 = list(gen2)  # list of tuples (log-posterior odds, decision)
-
+  >>> gen3 = dm.process(hazard=.9, filter_step=1)  # prediction model where we force believed hazard rate to be 0.9
+  >>> dec3 = list(gen3)
 To produce a sequence of trials with hazards that vary according to their own meta-hazard rate,
 use the class Audio2AFCSimulation. Below, we generate 400 trials with hazards being either 0.1 or 0.9, a meta hazard
 rate of 0.01 and flat prior on the hazard values.
