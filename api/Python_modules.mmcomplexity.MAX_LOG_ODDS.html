@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>UnknownHazard &#8212; mmcomplexity 0.0.1 documentation</title>
+    <title>MAX_LOG_ODDS &#8212; mmcomplexity 0.0.1 documentation</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -18,8 +18,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="MAX_LOG_ODDS" href="Python_modules.mmcomplexity.MAX_LOG_ODDS.html" />
-    <link rel="prev" title="StimulusBlock" href="Python_modules.mmcomplexity.StimulusBlock.html" /> 
+    <link rel="next" title="SIDES" href="Python_modules.mmcomplexity.SIDES.html" />
+    <link rel="prev" title="UnknownHazard" href="Python_modules.mmcomplexity.UnknownHazard.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -31,10 +31,10 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="Python_modules.mmcomplexity.MAX_LOG_ODDS.html" title="MAX_LOG_ODDS"
+          <a href="Python_modules.mmcomplexity.SIDES.html" title="SIDES"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="Python_modules.mmcomplexity.StimulusBlock.html" title="StimulusBlock"
+          <a href="Python_modules.mmcomplexity.UnknownHazard.html" title="UnknownHazard"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">mmcomplexity 0.0.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../module_documentation.html" accesskey="U">Python_modules.mmcomplexity Module</a> &#187;</li> 
@@ -46,43 +46,23 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="unknownhazard">
-<h1>UnknownHazard<a class="headerlink" href="#unknownhazard" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="Python_modules.mmcomplexity.UnknownHazard">
-<em class="property">class </em><code class="descclassname">Python_modules.mmcomplexity.</code><code class="descname">UnknownHazard</code><span class="sig-paren">(</span><em>stimulus_object</em>, <em>sources_prior=(0.5</em>, <em>0.5)</em><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.mmcomplexity.UnknownHazard" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="Python_modules.mmcomplexity.BinaryDecisionMaker.html#Python_modules.mmcomplexity.BinaryDecisionMaker" title="Python_modules.mmcomplexity.BinaryDecisionMaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">Python_modules.mmcomplexity.BinaryDecisionMaker</span></code></a></p>
-<p class="rubric">Methods Summary</p>
-<table class="longtable docutils align-center">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#Python_modules.mmcomplexity.UnknownHazard.process" title="Python_modules.mmcomplexity.UnknownHazard.process"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process</span></code></a>([observations, hazard])</p></td>
-<td><p>This is where the bulk of the decision process occurs.</p></td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Methods Documentation</p>
-<dl class="method">
-<dt id="Python_modules.mmcomplexity.UnknownHazard.process">
-<code class="descname">process</code><span class="sig-paren">(</span><em>observations=None</em>, <em>hazard=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.mmcomplexity.UnknownHazard.process" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is where the bulk of the decision process occurs. Observations are converted into a decision variable.</p>
-<p>For now, only the log posterior odds of the sources is computed, and hazard rate is assumed fixed.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>observations (list): sequence of perceived sound locations. If None, self.observations is used
-hazard: hazard rate, if None, the one from the stimulus_object attribute is fetched</p>
-</dd>
-<dt>Returns:</dt><dd><dl class="simple">
-<dt>generator object that yields (joint posterior, decisions)</dt><dd><p>joint posterior is a dict…</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p>todo: implement this method</p>
-</dd></dl>
-
+  <div class="section" id="max-log-odds">
+<h1>MAX_LOG_ODDS<a class="headerlink" href="#max-log-odds" title="Permalink to this headline">¶</a></h1>
+<dl class="data">
+<dt id="Python_modules.mmcomplexity.MAX_LOG_ODDS">
+<code class="descclassname">Python_modules.mmcomplexity.</code><code class="descname">MAX_LOG_ODDS</code><em class="property"> = 100</em><a class="headerlink" href="#Python_modules.mmcomplexity.MAX_LOG_ODDS" title="Permalink to this definition">¶</a></dt>
+<dd><p>int([x]) -&gt; integer
+int(x, base=10) -&gt; integer</p>
+<p>Convert a number or string to an integer, or return 0 if no arguments
+are given.  If x is a number, return x.__int__().  For floating point
+numbers, this truncates towards zero.</p>
+<p>If x is not a number or if base is given, then x must be a string,
+bytes, or bytearray instance representing an integer literal in the
+given base.  The literal can be preceded by ‘+’ or ‘-‘ and be surrounded
+by whitespace.  The base defaults to 10.  Valid bases are 0 and 2-36.
+Base 0 means to interpret the base from the string as an integer literal.
+&gt;&gt;&gt; int(‘0b100’, base=0)
+4</p>
 </dd></dl>
 
 </div>
@@ -94,15 +74,15 @@ hazard: hazard rate, if None, the one from the stimulus_object attribute is fetc
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="Python_modules.mmcomplexity.StimulusBlock.html"
-                        title="previous chapter">StimulusBlock</a></p>
+  <p class="topless"><a href="Python_modules.mmcomplexity.UnknownHazard.html"
+                        title="previous chapter">UnknownHazard</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="Python_modules.mmcomplexity.MAX_LOG_ODDS.html"
-                        title="next chapter">MAX_LOG_ODDS</a></p>
+  <p class="topless"><a href="Python_modules.mmcomplexity.SIDES.html"
+                        title="next chapter">SIDES</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/api/Python_modules.mmcomplexity.UnknownHazard.rst.txt"
+      <li><a href="../_sources/api/Python_modules.mmcomplexity.MAX_LOG_ODDS.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -130,10 +110,10 @@ hazard: hazard rate, if None, the one from the stimulus_object attribute is fetc
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="Python_modules.mmcomplexity.MAX_LOG_ODDS.html" title="MAX_LOG_ODDS"
+          <a href="Python_modules.mmcomplexity.SIDES.html" title="SIDES"
              >next</a> |</li>
         <li class="right" >
-          <a href="Python_modules.mmcomplexity.StimulusBlock.html" title="StimulusBlock"
+          <a href="Python_modules.mmcomplexity.UnknownHazard.html" title="UnknownHazard"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">mmcomplexity 0.0.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../module_documentation.html" >Python_modules.mmcomplexity Module</a> &#187;</li> 

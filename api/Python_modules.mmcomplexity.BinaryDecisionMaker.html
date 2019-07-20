@@ -52,7 +52,10 @@
 <dt id="Python_modules.mmcomplexity.BinaryDecisionMaker">
 <em class="property">class </em><code class="descclassname">Python_modules.mmcomplexity.</code><code class="descname">BinaryDecisionMaker</code><span class="sig-paren">(</span><em>stimulus_object</em>, <em>sources_prior=(0.5</em>, <em>0.5)</em><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.mmcomplexity.BinaryDecisionMaker" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Simulate an observer performing our Auditory change-point 2AFC task</p>
+<p>Base class to simulate an observer performing our Auditory change-point 2AFC task.
+Note that the bulk of the decision process algorithm is intentionally not implemented in this class.
+Thus, classes inheriting from it must re-implement the process() method.
+This model uses the true probability that the sound occurs on same side as the source.</p>
 <p class="rubric">Attributes Summary</p>
 <table class="longtable docutils align-center">
 <colgroup>
@@ -63,10 +66,7 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#Python_modules.mmcomplexity.BinaryDecisionMaker.bias" title="Python_modules.mmcomplexity.BinaryDecisionMaker.bias"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bias</span></code></a></p></td>
 <td><p>probability with which observer picks ‘right’ when guessing.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#Python_modules.mmcomplexity.BinaryDecisionMaker.likelihoods_known" title="Python_modules.mmcomplexity.BinaryDecisionMaker.likelihoods_known"><code class="xref py py-obj docutils literal notranslate"><span class="pre">likelihoods_known</span></code></a></p></td>
-<td><p>if true, model uses true probability that the sound occurs on same side as source</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#Python_modules.mmcomplexity.BinaryDecisionMaker.mislocalization_noise" title="Python_modules.mmcomplexity.BinaryDecisionMaker.mislocalization_noise"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mislocalization_noise</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#Python_modules.mmcomplexity.BinaryDecisionMaker.mislocalization_noise" title="Python_modules.mmcomplexity.BinaryDecisionMaker.mislocalization_noise"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mislocalization_noise</span></code></a></p></td>
 <td><p>probability with which the observer hears a tone on the wrong side</p></td>
 </tr>
 </tbody>
@@ -94,12 +94,6 @@
 </dd></dl>
 
 <dl class="attribute">
-<dt id="Python_modules.mmcomplexity.BinaryDecisionMaker.likelihoods_known">
-<code class="descname">likelihoods_known</code><em class="property"> = True</em><a class="headerlink" href="#Python_modules.mmcomplexity.BinaryDecisionMaker.likelihoods_known" title="Permalink to this definition">¶</a></dt>
-<dd><p>if true, model uses true probability that the sound occurs on same side as source</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="Python_modules.mmcomplexity.BinaryDecisionMaker.mislocalization_noise">
 <code class="descname">mislocalization_noise</code><em class="property"> = 0</em><a class="headerlink" href="#Python_modules.mmcomplexity.BinaryDecisionMaker.mislocalization_noise" title="Permalink to this definition">¶</a></dt>
 <dd><p>probability with which the observer hears a tone on the wrong side</p>
@@ -110,7 +104,7 @@
 <dt id="Python_modules.mmcomplexity.BinaryDecisionMaker.observe">
 <code class="descname">observe</code><span class="sig-paren">(</span><em>list_of_sounds=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.mmcomplexity.BinaryDecisionMaker.observe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate subjective observations of a given stimulus</p>
-<p>todo: not clear yet whether list_of_sounds should be automatically extracted from the stimulus_object attribute</p>
+<p>todo: what to do if list_of_sounds is not None but distinct from self.stimulus_object.sound_sequence?</p>
 <dl class="simple">
 <dt>Args:</dt><dd><p>list_of_sounds (list): list of sound locations (str). If None, uses self.stimulus_object.sound_sequence</p>
 </dd>

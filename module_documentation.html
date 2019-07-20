@@ -18,7 +18,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="check_valid_sequence_of_sides" href="api/Python_modules.mmcomplexity.check_valid_sequence_of_sides.html" />
+    <link rel="next" title="check_reasonable_log_odds" href="api/Python_modules.mmcomplexity.check_reasonable_log_odds.html" />
     <link rel="prev" title="Audio_2AFC_Analysis" href="includeme.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -31,7 +31,7 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="api/Python_modules.mmcomplexity.check_valid_sequence_of_sides.html" title="check_valid_sequence_of_sides"
+          <a href="api/Python_modules.mmcomplexity.check_reasonable_log_odds.html" title="check_reasonable_log_odds"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="includeme.html" title="Audio_2AFC_Analysis"
@@ -47,7 +47,42 @@
             
   <div class="section" id="module-Python_modules.mmcomplexity">
 <span id="python-modules-mmcomplexity-module"></span><h1>Python_modules.mmcomplexity Module<a class="headerlink" href="#module-Python_modules.mmcomplexity" title="Permalink to this headline">¶</a></h1>
-<p>Python module to analyze mental model comlexity in our Auditory change-point task</p>
+<p>Python module to analyze mental model complexity in our Auditory change-point task</p>
+<p>To generate a block of trials with fixed hazard rate on the sources, use the StimulusBlock class.</p>
+<p>To build your own decision-making model, base your class on BinaryDecisionMaker.</p>
+<dl>
+<dt>Pre-existing sequential-update decision-making models are provided in this module:</dt><dd><p>KnownHazard:
+UnknownHazard</p>
+</dd>
+<dt>To initialize the models, you must provide a stimulus block and call the observe method.</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">stim</span> <span class="o">=</span> <span class="n">StimulusBlock</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="o">.</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># stimulus block with hazard rate 0.2 and 100 trials</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dm</span> <span class="o">=</span> <span class="n">KnownHazard</span><span class="p">(</span><span class="n">stim</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dm</span><span class="o">.</span><span class="n">observe</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt>To run the decision making algorithm on a sequence of trials, we use generators:</dt><dd><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">gen1</span> <span class="o">=</span> <span class="n">dm</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="n">filter_step</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># predict the next source</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dec1</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">gen1</span><span class="p">)</span>  <span class="c1"># list of tuples (log-posterior odds, decision)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gen2</span> <span class="o">=</span> <span class="n">dm</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="n">filter_step</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># infer the current source</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dec2</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">gen2</span><span class="p">)</span>  <span class="c1"># list of tuples (log-posterior odds, decision)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gen3</span> <span class="o">=</span> <span class="n">dm</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">hazard</span><span class="o">=.</span><span class="mi">9</span><span class="p">,</span> <span class="n">filter_step</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># prediction model where we force believed hazard rate to be 0.9</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dec3</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">gen3</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<p>To produce a sequence of trials with hazards that vary according to their own meta-hazard rate,
+use the class Audio2AFCSimulation. Below, we generate 400 trials with hazards being either 0.1 or 0.9, a meta hazard
+rate of 0.01 and flat prior on the hazard values.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">Audio2AFCSimulation</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">],</span> <span class="o">.</span><span class="mi">01</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>  <span class="c1"># trial info is contained in a pandas.DataFrame</span>
+</pre></div>
+</div>
+<p>– Technical note – to activate warnings in interactive Shell, type:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">warnings</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">mmcomplexity</span> <span class="k">as</span> <span class="nn">mmx</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="n">mmx</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;__name__&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
 <div class="section" id="functions">
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
 <table class="longtable docutils align-center">
@@ -56,6 +91,12 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/Python_modules.mmcomplexity.check_reasonable_log_odds.html#Python_modules.mmcomplexity.check_reasonable_log_odds" title="Python_modules.mmcomplexity.check_reasonable_log_odds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_reasonable_log_odds</span></code></a>(l)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/Python_modules.mmcomplexity.check_valid_probability_distribution.html#Python_modules.mmcomplexity.check_valid_probability_distribution" title="Python_modules.mmcomplexity.check_valid_probability_distribution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_valid_probability_distribution</span></code></a>(dist_array)</p></td>
+<td><p>checks that sum of elements in array is 1, up to TOLERANCE level</p></td>
+</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="api/Python_modules.mmcomplexity.check_valid_sequence_of_sides.html#Python_modules.mmcomplexity.check_valid_sequence_of_sides" title="Python_modules.mmcomplexity.check_valid_sequence_of_sides"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_valid_sequence_of_sides</span></code></a>(sides)</p></td>
 <td><p>Check that all elements in sides are valid sides</p></td>
 </tr>
@@ -70,6 +111,18 @@
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="api/Python_modules.mmcomplexity.infer_bernoulli_bayes.html#Python_modules.mmcomplexity.infer_bernoulli_bayes" title="Python_modules.mmcomplexity.infer_bernoulli_bayes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">infer_bernoulli_bayes</span></code></a>(num_successes, num_trials)</p></td>
 <td><p>Given <code class="docutils literal notranslate"><span class="pre">num_trials</span></code> independent observations from a Bernoulli random variable with <code class="docutils literal notranslate"><span class="pre">num_successes</span></code> successes, returns the posterior distribution over the Bernoulli parameter in the form of a Beta distribution.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/Python_modules.mmcomplexity.log_odds_to_posterior.html#Python_modules.mmcomplexity.log_odds_to_posterior" title="Python_modules.mmcomplexity.log_odds_to_posterior"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_odds_to_posterior</span></code></a>(log_odds)</p></td>
+<td><p>returns posterior over sources, given the log-posterior odds</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/Python_modules.mmcomplexity.normalize.html#Python_modules.mmcomplexity.normalize" title="Python_modules.mmcomplexity.normalize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">normalize</span></code></a>(array)</p></td>
+<td><p>Args:</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/Python_modules.mmcomplexity.posterior_to_log_odds.html#Python_modules.mmcomplexity.posterior_to_log_odds" title="Python_modules.mmcomplexity.posterior_to_log_odds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">posterior_to_log_odds</span></code></a>(posterior)</p></td>
+<td><p>Args:</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/Python_modules.mmcomplexity.propagate_posterior.html#Python_modules.mmcomplexity.propagate_posterior" title="Python_modules.mmcomplexity.propagate_posterior"><code class="xref py py-obj docutils literal notranslate"><span class="pre">propagate_posterior</span></code></a>(post, hazard[, llh, …])</p></td>
+<td><p>Args:</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="api/Python_modules.mmcomplexity.switch_side.html#Python_modules.mmcomplexity.switch_side" title="Python_modules.mmcomplexity.switch_side"><code class="xref py py-obj docutils literal notranslate"><span class="pre">switch_side</span></code></a>(side)</p></td>
 <td><p>Args:</p></td>
@@ -89,10 +142,10 @@
 <td><p>Use this class to launch simulations of our models</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="api/Python_modules.mmcomplexity.BinaryDecisionMaker.html#Python_modules.mmcomplexity.BinaryDecisionMaker" title="Python_modules.mmcomplexity.BinaryDecisionMaker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BinaryDecisionMaker</span></code></a>(stimulus_object[, …])</p></td>
-<td><p>Simulate an observer performing our Auditory change-point 2AFC task</p></td>
+<td><p>Base class to simulate an observer performing our Auditory change-point 2AFC task.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="api/Python_modules.mmcomplexity.KnownHazard.html#Python_modules.mmcomplexity.KnownHazard" title="Python_modules.mmcomplexity.KnownHazard"><code class="xref py py-obj docutils literal notranslate"><span class="pre">KnownHazard</span></code></a>(stimulus_object[, sources_prior])</p></td>
-<td><p></p></td>
+<td><p>Binary decision maker which is an ideal observer who knows the true hazard rate value and assumes it fixed.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="api/Python_modules.mmcomplexity.StimulusBlock.html#Python_modules.mmcomplexity.StimulusBlock" title="Python_modules.mmcomplexity.StimulusBlock"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StimulusBlock</span></code></a>(num_trials, hazard[, …])</p></td>
 <td><p>Define stimulus for a block of trials in which hazard rate is fixed</p></td>
@@ -111,8 +164,14 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/Python_modules.mmcomplexity.SIDES.html#Python_modules.mmcomplexity.SIDES" title="Python_modules.mmcomplexity.SIDES"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SIDES</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/Python_modules.mmcomplexity.MAX_LOG_ODDS.html#Python_modules.mmcomplexity.MAX_LOG_ODDS" title="Python_modules.mmcomplexity.MAX_LOG_ODDS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MAX_LOG_ODDS</span></code></a></p></td>
+<td><p>int([x]) -&gt; integer int(x, base=10) -&gt; integer</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/Python_modules.mmcomplexity.SIDES.html#Python_modules.mmcomplexity.SIDES" title="Python_modules.mmcomplexity.SIDES"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SIDES</span></code></a></p></td>
 <td><p>set of allowed sides</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/Python_modules.mmcomplexity.TOLERANCE.html#Python_modules.mmcomplexity.TOLERANCE" title="Python_modules.mmcomplexity.TOLERANCE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TOLERANCE</span></code></a></p></td>
+<td><p>under this threshold, a probability is deemed to be 0</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="api/Python_modules.mmcomplexity.bernoulli.html#Python_modules.mmcomplexity.bernoulli" title="Python_modules.mmcomplexity.bernoulli"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bernoulli</span></code></a></p></td>
 <td><p>A Bernoulli discrete random variable.</p></td>
@@ -125,11 +184,11 @@
 </div>
 <div class="section" id="class-inheritance-diagram">
 <h2>Class Inheritance Diagram<a class="headerlink" href="#class-inheritance-diagram" title="Permalink to this headline">¶</a></h2>
-<div class="graphviz"><img src="_images/inheritance-810b5031494b4c372c49e5d68779c2a818803b67.png" alt="Inheritance diagram of Python_modules.mmcomplexity.Audio2AFCSimulation, Python_modules.mmcomplexity.BinaryDecisionMaker, Python_modules.mmcomplexity.KnownHazard, Python_modules.mmcomplexity.StimulusBlock, Python_modules.mmcomplexity.UnknownHazard" usemap="#inheritance0506025e2b" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="_images/inheritance-048a31fd249559dfaedb2e9b0662fcc4c274145e.png" alt="Inheritance diagram of Python_modules.mmcomplexity.Audio2AFCSimulation, Python_modules.mmcomplexity.BinaryDecisionMaker, Python_modules.mmcomplexity.KnownHazard, Python_modules.mmcomplexity.StimulusBlock, Python_modules.mmcomplexity.UnknownHazard" usemap="#inheritance0506025e2b" class="inheritance graphviz" /></div>
 <map id="inheritance0506025e2b" name="inheritance0506025e2b">
 <area shape="rect" id="node1" href="api/Python_modules.mmcomplexity.Audio2AFCSimulation.html#Python_modules.mmcomplexity.Audio2AFCSimulation" target="_top" title="Use this class to launch simulations of our models" alt="" coords="5,104,168,129"/>
-<area shape="rect" id="node2" href="api/Python_modules.mmcomplexity.BinaryDecisionMaker.html#Python_modules.mmcomplexity.BinaryDecisionMaker" target="_top" title="Simulate an observer performing our Auditory change&#45;point 2AFC task" alt="" coords="7,55,167,80"/>
-<area shape="rect" id="node3" href="api/Python_modules.mmcomplexity.KnownHazard.html#Python_modules.mmcomplexity.KnownHazard" target="_top" title="KnownHazard" alt="" coords="225,31,337,56"/>
+<area shape="rect" id="node2" href="api/Python_modules.mmcomplexity.BinaryDecisionMaker.html#Python_modules.mmcomplexity.BinaryDecisionMaker" target="_top" title="Base class to simulate an observer performing our Auditory change&#45;point 2AFC task." alt="" coords="7,55,167,80"/>
+<area shape="rect" id="node3" href="api/Python_modules.mmcomplexity.KnownHazard.html#Python_modules.mmcomplexity.KnownHazard" target="_top" title="Binary decision maker which is an ideal observer who knows the true hazard rate value and assumes it fixed." alt="" coords="225,31,337,56"/>
 <area shape="rect" id="node5" href="api/Python_modules.mmcomplexity.UnknownHazard.html#Python_modules.mmcomplexity.UnknownHazard" target="_top" title="UnknownHazard" alt="" coords="216,80,345,105"/>
 <area shape="rect" id="node4" href="api/Python_modules.mmcomplexity.StimulusBlock.html#Python_modules.mmcomplexity.StimulusBlock" target="_top" title="Define stimulus for a block of trials in which hazard rate is fixed" alt="" coords="29,5,144,31"/>
 </map></div>
@@ -202,8 +261,8 @@ Main reference: <a class="reference external" href="https://docs.python.org/3/li
   <p class="topless"><a href="includeme.html"
                         title="previous chapter">Audio_2AFC_Analysis</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="api/Python_modules.mmcomplexity.check_valid_sequence_of_sides.html"
-                        title="next chapter">check_valid_sequence_of_sides</a></p>
+  <p class="topless"><a href="api/Python_modules.mmcomplexity.check_reasonable_log_odds.html"
+                        title="next chapter">check_reasonable_log_odds</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -235,7 +294,7 @@ Main reference: <a class="reference external" href="https://docs.python.org/3/li
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="api/Python_modules.mmcomplexity.check_valid_sequence_of_sides.html" title="check_valid_sequence_of_sides"
+          <a href="api/Python_modules.mmcomplexity.check_reasonable_log_odds.html" title="check_reasonable_log_odds"
              >next</a> |</li>
         <li class="right" >
           <a href="includeme.html" title="Audio_2AFC_Analysis"

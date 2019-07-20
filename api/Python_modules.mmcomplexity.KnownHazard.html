@@ -52,6 +52,7 @@
 <dt id="Python_modules.mmcomplexity.KnownHazard">
 <em class="property">class </em><code class="descclassname">Python_modules.mmcomplexity.</code><code class="descname">KnownHazard</code><span class="sig-paren">(</span><em>stimulus_object</em>, <em>sources_prior=(0.5</em>, <em>0.5)</em><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.mmcomplexity.KnownHazard" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="Python_modules.mmcomplexity.BinaryDecisionMaker.html#Python_modules.mmcomplexity.BinaryDecisionMaker" title="Python_modules.mmcomplexity.BinaryDecisionMaker"><code class="xref py py-class docutils literal notranslate"><span class="pre">Python_modules.mmcomplexity.BinaryDecisionMaker</span></code></a></p>
+<p>Binary decision maker which is an ideal observer who knows the true hazard rate value and assumes it fixed.</p>
 <p class="rubric">Methods Summary</p>
 <table class="longtable docutils align-center">
 <colgroup>
@@ -59,7 +60,7 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#Python_modules.mmcomplexity.KnownHazard.process" title="Python_modules.mmcomplexity.KnownHazard.process"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process</span></code></a>([observations, hazard])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Python_modules.mmcomplexity.KnownHazard.process" title="Python_modules.mmcomplexity.KnownHazard.process"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process</span></code></a>([observations, hazard, filter_step, …])</p></td>
 <td><p>This is where the bulk of the decision process occurs.</p></td>
 </tr>
 </tbody>
@@ -67,12 +68,18 @@
 <p class="rubric">Methods Documentation</p>
 <dl class="method">
 <dt id="Python_modules.mmcomplexity.KnownHazard.process">
-<code class="descname">process</code><span class="sig-paren">(</span><em>observations=None</em>, <em>hazard=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.mmcomplexity.KnownHazard.process" title="Permalink to this definition">¶</a></dt>
+<code class="descname">process</code><span class="sig-paren">(</span><em>observations=None</em>, <em>hazard=None</em>, <em>filter_step=0</em>, <em>target='source'</em><span class="sig-paren">)</span><a class="headerlink" href="#Python_modules.mmcomplexity.KnownHazard.process" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is where the bulk of the decision process occurs. Observations are converted into a decision variable.</p>
 <p>For now, only the log posterior odds of the sources is computed, and hazard rate is assumed fixed.</p>
-<dl class="simple">
+<dl>
 <dt>Args:</dt><dd><p>observations (list): sequence of perceived sound locations. If None, self.observations is used
-hazard: hazard rate, if None, the one from the stimulus_object attribute is fetched</p>
+hazard: hazard rate, if None, the one from the stimulus_object attribute is fetched
+filter_step (int): point in time on which the inference happens. 0 corresponds to present, 1 to prediction.</p>
+<blockquote>
+<div><p>When 0, the first decision happens after the first observation is made, when 1, the first decision
+(prediction) is made before the first observation is made.</p>
+</div></blockquote>
+<p>target (str): must be either ‘source’ or ‘sound’</p>
 </dd>
 <dt>Returns:</dt><dd><p>generator object that yields (log posterior odds, decisions)</p>
 </dd>
