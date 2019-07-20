@@ -14,9 +14,9 @@ To initialize the models, you must provide a stimulus block and call the observe
   >>> dm.observe()
 To run the decision making algorithm on a sequence of trials, we use generators:
   >>> gen1 = dm.process(target='source', filter_step=1)  # predict the next source
-  >>> dec1 = list(gen1)  # list of decisions
+  >>> dec1 = list(gen1)  # list of tuples (log-posterior odds, decision)
   >>> gen2 = dm.process(target='source', filter_step=0)  # infer the current source
-  >>> dec2 = list(gen2)  # list of decisions
+  >>> dec2 = list(gen2)  # list of tuples (log-posterior odds, decision)
 
 To produce a sequence of trials with hazards that vary according to their own meta-hazard rate,
 use the class Audio2AFCSimulation. Below, we generate 400 trials with hazards being either 0.1 or 0.9, a meta hazard
@@ -46,6 +46,9 @@ SIDES = {'left', 'right'}
 
 MAX_LOG_ODDS = 100
 assert MAX_LOG_ODDS > 0
+
+TOLERANCE = 1 / 10000
+"""under this threshold, a probability is deemed to be 0"""
 
 
 def flag_change_points(seq):
@@ -201,18 +204,84 @@ def check_reasonable_log_odds(l):
     return -MAX_LOG_ODDS < l < MAX_LOG_ODDS
 
 
-def get_posterior_from_log_odds(log_odds):
+def log_odds_to_posterior(log_odds):
+    """returns posterior over sources, given the log-posterior odds"""
     assert np.isscalar(log_odds)
-    assert check_reasonable_log_odds(log_odds)
-    return 1 / (1 + np.exp(-log_odds))
+    assert check_reasonable_log_odds(log_odds), 'log odds too extreme'
+    p = 1 / (1 + np.exp(-log_odds))
+    return {'right': p, 'left': 1-p}
 
 
 def posterior_to_log_odds(posterior):
-    raise NotImplementedError
+    """
+    Args:
+        posterior (dict): must have the keys 'right' and 'left'
+
+    Returns: log posterior odds if reasonable, otherwise +/- np.inf
+
+    """
+    try:
+        log_odds = np.log(posterior['right'] / posterior['left'])
+    except ZeroDivisionError:
+        log_odds = np.inf
+
+    if check_reasonable_log_odds(log_odds):
+        return log_odds
+    else:
+        return np.sign(log_odds) * np.inf
 
 
 def check_valid_probability_distribution(dist_array):
-    raise NotImplementedError
+    """checks that sum of elements in array is 1, up to TOLERANCE level"""
+    return abs(dist_array.sum() - 1) < TOLERANCE
+
+
+def normalize(array):
+    """
+    Args:
+        array: numpy array with positive entries
+
+    Returns: numpy array with entries that sum to 1
+    """
+    if check_valid_probability_distribution(array):
+        return array
+
+    return array / array.sum()
+
+
+def propagate_posterior(post, hazard, llh=None, sound=None, norm=True):
+    """
+    Args:
+        post (dict): represents the posterior over sources
+        hazard: hazard rate on source (between 0 and 1)
+        llh (dict): must have two keys 'left', 'right', and values must be callables
+        sound (str): either 'left' or 'right', corresponds to a sound location
+        norm (bool): if True, returned posterior is a true distribution
+
+    Returns (dict): posterior, after propagating it according to hazard rate
+    """
+    le = post['left']
+    ri = post['right']
+
+    if llh is None:
+        assert sound is None
+    elif sound is None:
+        assert llh is None
+    else:
+        # propagate forward one step with observation input
+        ll = llh['left'](sound) * (hazard * ri + (1 - hazard) * le)
+        rr = llh['right'](sound) * (hazard * le + (1 - hazard) * ri)
+        # turn into probability distribution
+        if norm:
+            array = normalize(np.array([ll, rr]))
+        return {'left': array[0], 'right': array[1]}
+
+    ll = hazard * ri + (1 - hazard) * le
+    rr = hazard * le + (1 - hazard) * ri
+
+    if norm:
+        array = normalize(np.array([ll, rr]))
+    return {'left': array[0], 'right': array[1]}
 
 
 class StimulusBlock:
@@ -332,6 +401,15 @@ class BinaryDecisionMaker:
             raise ValueError("at least one entry of sources_prior is negative")
         self.sources_prior = {'left': sources_prior[0], 'right': sources_prior[1]}
 
+        # build likelihoods as callables:
+        def likelihood_left(s):
+            p = self.stimulus_object.likelihood_same_side
+            return p if s == 'left' else 1 - p
+
+        def likelihood_right(s):
+            return 1 - likelihood_left(s)
+        self.likelihoods = {'left': likelihood_left, 'right': likelihood_right}
+
     def observe(self, list_of_sounds=None):
         """
         Generate subjective observations of a given stimulus
@@ -403,7 +481,9 @@ class KnownHazard(BinaryDecisionMaker):
         Args:
             observations (list): sequence of perceived sound locations. If None, self.observations is used
             hazard: hazard rate, if None, the one from the stimulus_object attribute is fetched
-            filter_step (int): point in time on which the inference happens. 0 corresponds to present, 1 to prediction
+            filter_step (int): point in time on which the inference happens. 0 corresponds to present, 1 to prediction.
+              When 0, the first decision happens after the first observation is made, when 1, the first decision
+              (prediction) is made before the first observation is made.
             target (str): must be either 'source' or 'sound'
         Returns:
             generator object that yields (log posterior odds, decisions)
@@ -436,51 +516,96 @@ class KnownHazard(BinaryDecisionMaker):
 
             Returns:
                 float: positive favors 'right', negative 'left'
-
             """
+            # todo: should I check for blow up?
             numerator = hazard * np.exp(-y) + 1 - hazard
             denominator = hazard * np.exp(y) + 1 - hazard
             return np.log(numerator / denominator)
 
         def recursive_update():
+            """
+            This is a Python generator
+            Returns: really yields a tuple (log posterior odds, decision), with decision in SIDES
+            """
             decision_number = 0
             num_observations = len(observations)
 
             if all(self.sources_prior.values()):  # checks that no side has 0 prior probability
-                prior_belief = np.log(self.sources_prior['right'] / self.sources_prior['left'])
-            else:  # this is the trivial case in which the delta prior cannot be changed
-                prior_belief = np.inf if self.sources_prior['right'] == 1 else -np.inf
+                prior_belief = posterior_to_log_odds(self.sources_prior)
+            else:
+                # this is the case in which the prior on one source is 1 (eq. 2.2 in Radillo's Ph.D. dissertation)
+                # we build the belief manually, propagating probability mass according to hazard rate, and observations
+                # matter
+                post = self.sources_prior  # posterior (at the very beginning, this is the prior)
                 while decision_number < num_observations:
-                    yield prior_belief, self._decide(prior_belief)
+                    if filter_step == 0:  # we are inferring the present source
+                        if decision_number:  # if this is NOT the first decision (the alternative is taken care of)
+                            post = propagate_posterior(post, hazard,
+                                                       llh=self.likelihoods, sound=observations[decision_number])
+
+                        belief = posterior_to_log_odds(post)
+
+                        yield belief, self._decide(belief)
+
+                        decision_number += 1
+
+                    elif filter_step == 1:
+                        if decision_number > 0:  # update posterior for present time based on last trial's observation
+                            post = propagate_posterior(post, hazard,
+                                                       llh=self.likelihoods, sound=observations[decision_number - 1])
+                        posterior_future = propagate_posterior(post, hazard)
+                        log_prediction_odds = posterior_to_log_odds(posterior_future)
+                        decision = self._decide(log_prediction_odds)
+                        yield log_prediction_odds, decision
+                        decision_number += 1
+
+            # if this line is ever reached, then the prior on the sources was not a delta prior
+            while decision_number < num_observations:
+                # compute jump size and log posterior odds
+                if filter_step == 0:
+                    if observations[decision_number] == 'right':
+                        jump = jump_magnitude
+                    else:
+                        jump = -jump_magnitude
+
+                    if decision_number > 0:
+                        log_posterior_odds += jump + discount_old_evidence(log_posterior_odds)
+                    else:
+                        log_posterior_odds = prior_belief + jump
+
+                    decision = self._decide(log_posterior_odds)
+
+                    yield log_posterior_odds, decision
                     decision_number += 1
 
-            while decision_number < num_observations:
-                if observations[decision_number] == 'right':
-                    jump = jump_magnitude
-                else:
-                    jump = -jump_magnitude
+                elif filter_step == 1:  # in prediction mode, decision is based on observation from last round
+                    if decision_number == 0:
+                        log_posterior_odds = prior_belief
+                    else:
+                        if observations[decision_number - 1] == 'right':
+                            jump = jump_magnitude
+                        else:
+                            jump = -jump_magnitude
 
-                if not decision_number:  # if this is the first decision
-                    log_posterior_odds = prior_belief
+                        if decision_number == 1:
+                            log_posterior_odds += jump
+                        else:
+                            log_posterior_odds += jump + discount_old_evidence(log_posterior_odds)
 
-                log_posterior_odds += jump + discount_old_evidence(log_posterior_odds)
-
-                if filter_step == 0:
-                    decision = self._decide(log_posterior_odds)
-                elif filter_step == 1:
                     # get posterior for present state
-                    posterior_present = get_posterior_from_log_odds(log_posterior_odds)
+                    posterior_present = log_odds_to_posterior(log_posterior_odds)
+                    posterior_future = propagate_posterior(posterior_present, hazard)
 
                     # compute log posterior odds for next state
-                    log_prediction_odds = posterior_to_log_odds(posterior_present)
+                    log_prediction_odds = posterior_to_log_odds(posterior_future)
 
                     # decide
                     decision = self._decide(log_prediction_odds)
+
+                    yield log_prediction_odds, decision
+                    decision_number += 1
                 else:
                     raise ValueError('only 0 and 1 are valid values for filter_step for now')
-
-                yield log_posterior_odds, decision
-                decision_number += 1
 
         return recursive_update()
 
