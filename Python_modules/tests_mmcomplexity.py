@@ -76,7 +76,7 @@ class TestStimulusBlock(unittest.TestCase):
 
     def test_scalar_hazard(self):
         """test that only scalar h with 0 <= h <= 1 are accepted"""
-        bad_h = [-1, 12, [.2,.3]]
+        bad_h = [-1, 12, [.2, .3]]
         good_h = [0, 1, 3/4]
         for h in bad_h:
             self.assertRaises(ValueError, mmx.StimulusBlock, 10, h)
@@ -144,10 +144,10 @@ class TestKnownHazard(unittest.TestCase):
         self.assertIsInstance(first_item, tuple)
 
     def test_delta_sources_prior(self):
-        # if delta prior on a source, all decisions should equal this source
+        # if delta prior on a source and hazard = 0, all decisions should equal this source.
         # delta prior on left source
         self.observer.sources_prior = {'left': 1, 'right': 0}
-        p = self.observer.process()
+        p = self.observer.process(hazard=0)
         for _ in range(self.num_trials):
             self.assertEqual(next(p)[1], 'left')
         last_item = next(p, 'exhausted')
@@ -155,7 +155,7 @@ class TestKnownHazard(unittest.TestCase):
 
         # delta prior on right source
         self.observer.sources_prior = {'left': 0, 'right': 1}
-        p = self.observer.process()
+        p = self.observer.process(hazard=0)
         for _ in range(self.num_trials):
             self.assertEqual(next(p)[1], 'right')
         last_item = next(p, 'exhausted')
@@ -168,6 +168,23 @@ class TestKnownHazard(unittest.TestCase):
             _, decision = next(p)
             last_sound = self.observer.observations[o]
             self.assertEqual(decision, last_sound)
+
+    def test_prediction(self):
+        # if prior is 1 on left source and hazard is 0, all predictions should be left
+        self.observer.sources_prior = {'left': 1, 'right': 0}
+        p = self.observer.process(filter_step=1, hazard=0)
+        for _, dec in p:
+            self.assertEqual(dec, 'left')
+
+        # if prior is 1 on left source and hazard is 1, predictions alternate on every trial
+        # we arbitrarily decide to propagate the prior according to h in the very first prediction, which is a guess,
+        # really, so this is why the first assertEqual call below checks for 'right'
+        p = self.observer.process(filter_step=1, hazard=1)
+        _, old_dec = next(p)
+        self.assertEqual(old_dec, 'right')
+        for _, new_dec in p:
+            self.assertNotEqual(old_dec, new_dec)
+            old_dec = new_dec
 
 
 class TestSimulation(unittest.TestCase):
