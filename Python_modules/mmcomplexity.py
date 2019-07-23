@@ -657,6 +657,9 @@ class UnknownHazard(BinaryDecisionMaker):
 class Audio2AFCSimulation:
     """
     Use this class to launch simulations of our models
+
+    todo: implement options to automatically generate decision data from some models
+    See commit 2a2ac00 for an example of what one has to do at the moment
     """
 
     def __init__(self, tot_trials, h_values, meta_k, meta_prior_h, catch_rate=0.05):
