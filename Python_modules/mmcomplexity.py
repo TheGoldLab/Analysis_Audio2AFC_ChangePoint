@@ -208,8 +208,12 @@ def check_reasonable_log_odds(l):
 def log_odds_to_posterior(log_odds):
     """returns posterior over sources, given the log-posterior odds"""
     assert np.isscalar(log_odds)
-    assert check_reasonable_log_odds(log_odds), 'log odds too extreme'
-    p = 1 / (1 + np.exp(-log_odds))
+    if check_reasonable_log_odds(log_odds):
+        p = 1 / (1 + np.exp(-log_odds))
+    else:
+        print(f'log odds {log_odds} too extreme, posterior set to delta')
+        p = np.heaviside(np.sign(log_odds), 0)
+
     return {'right': p, 'left': 1-p}
 
 
