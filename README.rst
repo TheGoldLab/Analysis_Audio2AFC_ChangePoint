@@ -6,7 +6,7 @@ Simulations and analysis for our auditory change-point task
 Repository Structure
 ----------------------
 
-In the ``Tutorials/`` folder, we gather code that illustrates important concepts in our work.
+In the ``Theory/`` folder, we gather code that illustrates important concepts in our work.
 
 The ``simulations.ipynb`` file is a Jupyter notebook that contains our current research notes and
 figures.
