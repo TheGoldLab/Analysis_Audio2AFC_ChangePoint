@@ -208,8 +208,12 @@ def check_reasonable_log_odds(l):
 def log_odds_to_posterior(log_odds):
     """returns posterior over sources, given the log-posterior odds"""
     assert np.isscalar(log_odds)
-    assert check_reasonable_log_odds(log_odds), 'log odds too extreme'
-    p = 1 / (1 + np.exp(-log_odds))
+    if check_reasonable_log_odds(log_odds):
+        p = 1 / (1 + np.exp(-log_odds))
+    else:
+        print(f'log odds {log_odds} too extreme, posterior set to delta')
+        p = np.heaviside(np.sign(log_odds), 0)
+
     return {'right': p, 'left': 1-p}
 
 
@@ -287,14 +291,21 @@ def propagate_posterior(post, hazard, llh=None, sound=None, norm=True):
 
 class StimulusBlock:
     """Define stimulus for a block of trials in which hazard rate is fixed"""
-
-    source_prior = {'left': 0.5, 'right': 0.5}
-
-    likelihood_same_side = 0.8
-    """Likelihood of a sound occurring on the same side as the source"""
-
-    def __init__(self, num_trials, hazard, first_source=None, sources=None, sounds=None):
+    def __init__(self, num_trials, hazard, source_prior=(.5, .5), likelihood_same_side=0.8,
+                 first_source=None, sources=None, sounds=None):
+        """
+        Args:
+            num_trials: num of trials
+            hazard: on sources
+            source_prior: probabilities for sources: (left, right)
+            likelihood_same_side: Likelihood of a sound occurring on the same side as the source
+            first_source: first source of stimulus
+            sources: list of sources (instead of generating it)
+            sounds: list of sounds, instead of generating it
+        """
         self.num_trials = num_trials
+        self.source_prior = {'left': source_prior[0], 'right': source_prior[1]}
+        self.likelihood_same_side = likelihood_same_side
 
         if isinstance(hazard, float) or isinstance(hazard, int):
             if 0 <= hazard <= 1:
@@ -382,7 +393,11 @@ class BinaryDecisionMaker:
     """
 
     mislocalization_noise = 0
-    """probability with which the observer hears a tone on the wrong side"""
+    """
+    probability with which the observer hears a tone on the wrong side. Recall, if this attribute is modified from 
+    an instance, only this instance will see it modified. If the attribute is modified from the class, all instances 
+    will see the modification.
+    """
 
     bias = 0.5
     """probability with which observer picks 'right' when guessing. Unbiased corresponds to 0.5"""
@@ -646,6 +661,9 @@ class UnknownHazard(BinaryDecisionMaker):
 class Audio2AFCSimulation:
     """
     Use this class to launch simulations of our models
+
+    todo: implement options to automatically generate decision data from some models
+    See commit 2a2ac00 for an example of what one has to do at the moment
     """
 
     def __init__(self, tot_trials, h_values, meta_k, meta_prior_h, catch_rate=0.05):
