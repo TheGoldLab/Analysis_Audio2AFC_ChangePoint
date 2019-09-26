@@ -1,0 +1,63 @@
+---
+title: "First Subject Test Notebook"
+output:
+  html_document:
+    df_print: paged
+    code_folding: hide
+---
+# Basic behavioral questions
+- How many rows are there in the matrix?
+- What are the meaning of each column in the table?
+- How many valid trials are there in the matrix?
+- Does the matrix say whether it is a report or a prediction block?
+- Does the matrix contain some identifier for the subject (i.e. HUP number)?
+
+```{r}
+library(ggplot2)
+library(data.table)
+```
+
+```{r}
+# load data from one session
+data <- fread('/home/adrian/Audio2AFC_CP/ECoG_patients/raw/2019_08_15_14_52/2019_08_15_14_52_FIRA.csv')
+```
+
+## How many rows in the matrix
+```{r}
+data[,.(numRows=.N)]
+```
+
+## Meaning of each column in the table
+```{r}
+str(data)
+head(data)
+
+```
+
+```{r}
+columnName <- names(data)
+print(columnName)
+```
+
+```{r}
+description <- c(
+  "1 = Tutorial; 2 = Task",
+  "index of trial in the order it was presented to patient",
+  "time stamp for start of trial",
+  "time stamp for end of trial",
+  "time stamp when first TTL is sent on current trial (should be close to trialStart)",
+  "formula is numPulses =  mod(max(0, treeNode.trialCount-1), self.maxPulses)+1;",
+  "time stamp when last TTL pulse is sent on current trial",
+  "in Report task: RT = choiceTime - sound1Off; In prediction task: RT = choiceTime - fixationOn",
+  "1 for choosing Right, 0 for choosing Left",
+  "1=correct, 0=wrong. NOTE: report task trials end with response (correctness is retrograde), prediction task starts with response (correctness is anterograde).",
+  "where sound/tone occurred: 180 = Left, 0 = Right",
+  "where source was (coding like direction)",
+  "whether it is a catch trial (1) or not (0)"
+  )
+```
+
+```{r}
+print(data.table(columnName, description))
+```
+
