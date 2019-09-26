@@ -45,3 +45,41 @@ FIRA =
 
 
 ####################################################################################
+
+
+
+
+#### MATLAB CONSOLE SESSION #####
+>> path='/home/adrian/Audio2AFC_CP/ECoG_patients/raw/2019_08_15_15_14/2019_08_15_15_14_topsDataLog.mat';
+>> FIRA = topsDataLog.parseEcodes('trial',path);
+Warning: Cannot load an object of class 'topsTaskHelperFeedback':
+Its class cannot be found. 
+> In topsDataFile.read (line 119)
+  In topsDataLog/readIncrementFromFile (line 138)
+  In topsDataLog.readDataFile (line 481)
+  In topsDataLog.getTaggedData (line 575)
+  In topsDataLog.parseEcodes (line 499) 
+Warning: Cannot load an object of class 'topsTaskHelperFeedback':
+Its class cannot be found. 
+> In topsDataFile.read (line 119)
+  In topsDataLog/readIncrementFromFile (line 138)
+  In topsDataLog.readDataFile (line 481)
+  In topsDataLog.getTaggedData (line 575)
+  In topsDataLog.parseEcodes (line 499) 
+Warning: Cannot load an object of class 'topsTaskHelperFeedback':
+Its class cannot be found. 
+> In topsDataFile.read (line 119)
+  In topsDataLog/readIncrementFromFile (line 138)
+  In topsDataLog.readDataFile (line 481)
+  In topsDataLog.getTaggedData (line 575)
+  In topsDataLog.parseEcodes (line 499) 
+Warning: Cannot load an object of class 'topsTaskHelperFeedback':
+Its class cannot be found. 
+> In topsDataFile.read (line 119)
+  In topsDataLog/readIncrementFromFile (line 138)
+  In topsDataLog.readDataFile (line 481)
+  In topsDataLog.getTaggedData (line 575)
+  In topsDataLog.parseEcodes (line 499) 
+>> trials = array2table(FIRA.data, 'VariableNames', FIRA.name);
+>> writetable(trials, '2019_08_15_15_14_FIRA.csv')
+####################################################################################

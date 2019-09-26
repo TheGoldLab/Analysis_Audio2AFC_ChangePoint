@@ -7,7 +7,9 @@
     },
 	{
 		"name": "Lab_Matlab_Control",
-		"type": "include"
+		"type": "git",
+		"url": "https://github.com/TheGoldLab/Lab_Matlab_Control.git",
+		"flavor": "eyeDev"
 	},
 	{	
 		"name": "Task_Audio2AFC_ChangePoint",
@@ -16,5 +18,10 @@
 		"url": "https://github.com/TheGoldLab/Task_Audio2AFC_ChangePoint.git",
 	    "update": "never",
         "toolboxRoot": "#Task_Audio2AFC_ChangePoint"
+	},
+	{
+		"name": "Lab_Matlab_Utilities",
+		"type": "git",
+		"url": "https://github.com/TheGoldLab/Lab_Matlab_Utilities.git"
 	}
 ]
