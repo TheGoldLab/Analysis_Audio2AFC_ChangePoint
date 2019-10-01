@@ -19,19 +19,19 @@ library(data.table)
 
 ```{r}
 # load data from one session
-data <- fread('/home/adrian/Audio2AFC_CP/ECoG_patients/raw/2019_08_15_14_52/2019_08_15_14_52_FIRA.csv')
+data <- fread('/Users/adrian/Audio2AFC_CP/ECoG/raw/2019_08_15_14_52/2019_08_15_14_52_FIRA.csv')  # at desk
+#data <- fread('/home/adrian/Audio2AFC_CP/ECoG_patients/raw/2019_08_15_14_52/2019_08_15_14_52_FIRA.csv')  # in laptop
 ```
 
 ## How many rows in the matrix
 ```{r}
-data[,.(numRows=.N)]
+data[,.N]
 ```
 
 ## Meaning of each column in the table
 ```{r}
 str(data)
 head(data)
-
 ```
 
 ```{r}
@@ -48,16 +48,38 @@ description <- c(
   "time stamp when first TTL is sent on current trial (should be close to trialStart)",
   "formula is numPulses =  mod(max(0, treeNode.trialCount-1), self.maxPulses)+1;",
   "time stamp when last TTL pulse is sent on current trial",
-  "in Report task: RT = choiceTime - sound1Off; In prediction task: RT = choiceTime - fixationOn",
+  "in Report task: RT = choiceTime - sound1Off; In prediction task: RT = choiceTime - fixationOn. Note potential bug with negative RT (https://github.com/TheGoldLab/Task_Audio2AFC_ChangePoint/blob/7a631fe3ebc3e44b54de96c939e8540ec7fbf978/topsTreeNodeTaskAudio2AFCCP.m#L1395)",
   "1 for choosing Right, 0 for choosing Left",
   "1=correct, 0=wrong. NOTE: report task trials end with response (correctness is retrograde), prediction task starts with response (correctness is anterograde).",
   "where sound/tone occurred: 180 = Left, 0 = Right",
   "where source was (coding like direction)",
-  "whether it is a catch trial (1) or not (0)"
+  "whether it is a catch trial (1) or not (0)",
+  "seed base for trial",
+  "time at which unselected target switches off on screen",
+  "time at which the true source is displayed on screen",
+  "time at which selection square is shown on screen",
+  "time at which true sound location is indicated on screen",
+  "time at which white fixation cross appears on screen",
+  "time at which blue fixation cross appears on screen",
+  "targets appear on screen",
+  "first sound onset",
+  "second sound onset",
+  "first sound offset",
+  "second sound offset",
+  "true source shown on screen",
+  "subject presses button for first report",
+  "subject presses button for second report (on catch trials)",
+  "targets disappear",
+  "fixation cross disappears",
+  "feedback screen starts",
+  "release time of first button press",
+  "whether subject failed to press the button a second time on catch trial",
+  "whether subject pressed a different button on the second press than on the first press, for catch trial"
   )
 ```
 
 ```{r}
-print(data.table(columnName, description))
+field_descriptions <- data.table(columnName, description)
+write.csv(field_descriptions, 'FIRA_field_description.csv')
 ```
 
