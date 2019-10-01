@@ -19,24 +19,27 @@ library(data.table)
 
 ```{r}
 # load data from one session
-data <- fread('/Users/adrian/Audio2AFC_CP/ECoG/raw/2019_08_15_14_52/2019_08_15_14_52_FIRA.csv')  # at desk
+# data <- fread('/Users/adrian/Audio2AFC_CP/ECoG/raw/2019_08_15_14_52/2019_08_15_14_52_FIRA.csv')  # at desk
+data <- fread('/Users/adrian/Audio2AFC_CP/ECoG/raw/2019_08_15_15_14/2019_08_15_15_14_FIRA.csv')  # at desk
 #data <- fread('/home/adrian/Audio2AFC_CP/ECoG_patients/raw/2019_08_15_14_52/2019_08_15_14_52_FIRA.csv')  # in laptop
 ```
 
 ## How many rows in the matrix
 ```{r}
+data <- data[taskID == 2]  # we don't need the tutorial data
 data[,.N]
 ```
 
 ## Meaning of each column in the table
+See `FIRA_field_description.csv`.
 ```{r}
-str(data)
-head(data)
+# str(data)
+# head(data)
 ```
 
 ```{r}
 columnName <- names(data)
-print(columnName)
+# print(columnName)
 ```
 
 ```{r}
@@ -80,6 +83,11 @@ description <- c(
 
 ```{r}
 field_descriptions <- data.table(columnName, description)
-write.csv(field_descriptions, 'FIRA_field_description.csv')
+# write.csv(field_descriptions, 'FIRA_field_description.csv')
 ```
 
+## Missing RT data?
+```{r}
+data[,sum(is.na(RT))]
+```
+Why are these `na`?
