@@ -6,11 +6,16 @@ output:
     code_folding: hide
 ---
 # Basic behavioral questions
-- How many rows are there in the matrix?
+- How many rows are there in the matrix? 
+  - roughly 205. Why the variability?
 - What are the meaning of each column in the table?
+  - see `FIRA_field_description.csv`
 - How many valid trials are there in the matrix?
+  - what counts as a valid trial?
 - Does the matrix say whether it is a report or a prediction block?
+  - NO
 - Does the matrix contain some identifier for the subject (i.e. HUP number)?
+  - NO
 
 ```{r}
 library(ggplot2)
